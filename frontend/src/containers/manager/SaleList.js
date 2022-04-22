@@ -1,0 +1,225 @@
+import axios from 'axios';
+
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import endpoints from '../../redux/api/endpoints';
+import { jsDateTimeToStrDate } from '../../components/utils';
+import { parseErrorData, createUrlParamsFromFilters } from '../../redux/api/utils';
+import { DateFilter } from '../../components/CommonForms';
+
+
+export function SalesTable (props) {
+  const { sales, totals, deleteSale, rama } = props
+  console.log(rama)
+
+  return (
+    <table className='table table-sm table-responsive'>
+      <thead>
+        <th>Дата/Клиент</th>
+        <th>Пиломат</th>
+        <th>Сумма/Объем</th>
+        <th style={{lineHeight: '13px'}}>
+        {rama.sale_type === 'seller_kladman_same' 
+          ? 'Продавeц (комиссия кладмэна из вознаграждения продавца)'
+          : 'Продавeц'
+        }
+        </th>
+        <th>грузчик</th>
+        <th>кладмэн</th>
+        <th>Доставка</th>
+        <th className='text-nowrap'>Удалить</th>
+      </thead>
+      <tbody>
+        {sales.map(sale => 
+          <tr>
+            <td style={{lineHeight: '15px'}}>
+              {sale.date}
+              <span className='d-block'>{sale.note}</span>
+              <span className='font-13'>{sale.sale_type}</span>
+            </td>
+            <td className='text-nowrap'>
+              {sale.lumber_records.map(lumber =>
+                <span className='d-block mb-2' style={{lineHeight: '14px'}}>
+                  {lumber.quantity}шт {lumber.lumber}
+                  <span className='d-block font-italic'>{lumber.wood_species}</span>
+                  <span className='d-block font-italic'>розница общ <span className='font-500'>
+                    {lumber.selling_total_cash}</span></span>
+                  <span className='d-block font-italic'>розница 1м3 <span className='font-500'>
+                    {lumber.selling_price}</span></span>
+                  <span className='d-block font-italic'>опт общ <span className='font-500'>
+                    {lumber.rama_total_cash}</span></span>
+                  <span className='d-block font-italic'>опт 1м3 <span className='font-500'>
+                    {lumber.rama_price}</span></span>
+                </span>
+                )}
+            </td>
+            <td >
+              <span>{sale.selling_total_cash}р</span>
+              <span className='d-block'>{sale.volume} м3</span>
+            </td>
+            <td style={{lineHeight: '15px'}}>
+              {rama.sale_type === 'seller_kladman_same' 
+                ? <span className='d-block'>
+                    <span className='d-block'>{sale.seller_fee - sale.kladman_fee}</span>
+                    {`(${sale.seller_fee}  - ${sale.kladman_fee})`}
+                  </span>
+                : <span className='d-block'>{sale.seller_fee}</span>
+              }
+              {sale.seller_name && <span className=''>{sale.seller_name}</span>}
+            </td>
+            <td>
+              {sale.loader_fee}
+            </td>
+            <td>
+              {sale.kladman_fee}
+            </td>
+            <td>
+              {sale.delivery_fee}
+            </td>
+            <td>
+              <button className='btn btn-xs bg-red1-light' value={sale.id} onClick={deleteSale}>Удалить</button>
+            </td>
+          </tr>
+        )}
+        <tr className='font-500 font-16'>
+          <td>Итого</td>
+          <td>-</td>
+          <td>{totals.total_selling_cash}</td>
+          <td>
+            {rama.sale_type === 'seller_kladman_same' 
+             ? <span>
+                  <span className='d-block'>{totals.total_seller_fee - totals.total_kladman_fee}</span>
+                  {`(${totals.total_seller_fee}  - ${totals.total_kladman_fee})`}
+               </span>
+             : totals.total_seller_fee
+            }
+          </td>
+
+          <td>{totals.total_loader_fee}</td>
+          <td>{totals.total_kladman_fee}</td>
+          <td>{totals.total_delivery_fee}</td>
+          <td>{totals.total_add_expenses}</td>
+        </tr>
+      </tbody>
+    </table>
+  )
+}
+
+
+export class SaleList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      saleList: [],
+      totals: {},
+
+      startDate: '',
+      endDate: '',
+      
+      message: null,
+      error: null,
+    }
+
+    this.deleteSale = this.deleteSale.bind(this);
+    this.setData = this.setData.bind(this);
+    this.showResults = this.showResults.bind(this);
+  }
+
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    let today = new Date()
+    let yesterday = new Date()
+    // yesterday.setDate(today. getDate() - 1);
+    let startDate = jsDateTimeToStrDate(yesterday)
+    let endDate = jsDateTimeToStrDate(today)
+    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id, 
+      date_before: endDate, date_after:startDate});
+
+    axios({
+      method: 'get',
+      url: endpoints.SALES,
+      params: params,
+      headers: {'Authorization': `JWT ${token}` }
+    })
+    .then(response => {
+      this.setState({ ...this.state, saleList: response.data.sales, totals: response.data.totals,
+        startDate: startDate, endDate: endDate });
+    })
+  }
+
+  deleteSale (e) {
+    const token = localStorage.getItem('token');
+
+    axios({
+      method: 'delete',
+      url: endpoints.manager_delete_sale(e.target.value),
+      headers: {'Authorization': `JWT ${token}` }
+    })
+    .then(response => {
+      this.setState({ ...this.state, saleList: response.data.sales, totals: response.data.totals });
+    })
+  }
+
+  setData (e) {
+    this.setState({
+      [e.target.name]: e.target.value 
+    })
+  }
+
+  showResults () {
+    const token = localStorage.getItem('token');
+    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id, 
+      date_before: this.state.endDate, date_after: this.state.startDate});
+    axios({
+      method: 'get',
+      url: endpoints.SALES,
+      headers: {'Authorization': `JWT ${token}` },
+      params: params
+    })
+    .then(response => {
+      this.setState({ ...this.state, saleList: response.data.sales, totals: response.data.totals });
+    })
+  }
+
+  render() {
+    const { saleList, totals } = this.state
+    return (
+      <div className='mt-2'>
+        <div className='card card-style mt-2'>
+          <div className='content'>
+            <DateFilter startDate={this.state.startDate} endDate={this.state.endDate} setData={this.setData}
+              showResults={this.showResults}/>
+          </div>
+        </div>
+        <div className='card card-style mb-2'>
+          <div className='content'>
+            <h4 className='mb-2'>Продажи ({saleList.length})</h4>
+            {saleList.length > 0 
+              ? <SalesTable sales={saleList} totals={totals} deleteSale={this.deleteSale}
+                  rama={this.props.ramaToSee} />
+              : <h5>Нет продаж</h5>
+            }
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+
+const mapStateToProps = (state) => ({
+  isLoggedIn: state.auth.isLoggedIn,
+  user: state.auth.user,
+  ramaToSee: state.auth.ramaToSee,
+  state: state
+});
+
+
+const mapDispatchToProps = dispatch => ({
+  // checkAuth: (groups) => dispatch(authActions.checkAuthRequest(groups))
+  // auth
+  // checkToken: (token) => dispatch(AuthActions.checkTokenRequest(token)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(SaleList);

@@ -1,0 +1,46 @@
+version: '3'
+
+services: 
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - "80:8080"
+      - "5432"
+    volumes:
+      - .:/code
+      - ./nginx:/etc/nginx/conf.d
+      - ./frontend:/var/www/frontend
+    # depends_on:
+    #   - backend
+
+  db:
+    restart: unless-stopped
+    image: postgres:10.1-alpine
+    ports: 
+      - "127.0.0.1:5432:5432"
+
+  backend:
+    build: .
+    depends_on:
+      - db
+      - nginx
+    # command: bash -c "cd batorama &&
+    #                   python manage.py migrate &&
+    #                   python manage.py makemigrations --no-input &&
+    #                   python manage.py test rawstock.tests.test_selectors_quota"
+
+    restart: unless-stopped
+    # command: bash -c "cd batorama && 
+    #                   python manage.py makemigrations --no-input &&
+    #                   python manage.py migrate &&
+    #                   python manage.py collectstatic --no-input &&
+    #                   gunicorn batorama.wsgi -b 0.0.0.0:8000"
+
+    command: bash -c "cd batorama && 
+                      gunicorn batorama.wsgi -b 0.0.0.0:8000"
+   
+    volumes:
+      - .:/code
+    ports:
+      - "8000"
