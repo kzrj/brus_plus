@@ -1,4 +1,4 @@
-import React, { Component, useRef  } from 'react';
+import React, { useRef, useState  } from 'react';
 
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select'
@@ -68,6 +68,23 @@ function LumberInputs (props) {
 }
 
 
+function LumberOptGroup (props) {
+  const { woodSpecie, lumberType, pineBrus, pineDoska, larchBrus, larchDoska } = props
+  let lumberOptions = []
+  if (woodSpecie === 'pine' && lumberType === 'brus') lumberOptions = pineBrus
+  if (woodSpecie === 'pine' && lumberType === 'doska') lumberOptions = pineDoska
+  if (woodSpecie === 'larch' && lumberType === 'brus') lumberOptions = larchBrus
+  if (woodSpecie === 'larch' && lumberType === 'doska') lumberOptions = larchDoska
+  
+  return (
+    <optgroup label>
+      {lumberOptions.map(lumber =>
+        <option value={lumber.id} >{`${lumber.name} ${lumber.wood_species}`} </option>
+        )}
+    </optgroup>
+  )
+}
+
 export function LumbersToSale (props) {
   const { lumber, setLumberID, calcRowQnty, calcRowCash, pineBrus,  pineDoska, turnCalc, delLumber, larchBrus,
      calcRoundRowQnty, calcRowVolume, calcRoundRowVolume, calcChinaRowQnty, calcChinaRowVolume, setShopPrice,
@@ -75,12 +92,41 @@ export function LumbersToSale (props) {
 
   const lumberRef = useRef(null);
   const executeScroll = () => lumberRef.current.scrollIntoView()
+  
+  const woodSpecies = [['pine', 'сосна'], ['larch', 'лиственница']]
+  const [currentWoodSpecies, setCurrentWoodSpecies] = useState('pine');
 
+  const lumberTypes = [['brus', 'брус'], ['doska', 'доска']]
+  const [currentLumberType, setCurrentLumberType] = useState('brus');
+
+  const filterBtnClass = 'btn btn-m border w-100 mx-2'
+  
   return (
     <div className='mt-2 mb-3 px-2 py-3 bg-white rounded-m border' ref={lumberRef}>
       <InputLabel htmlFor="grouped-native-select" className='font-19 font-600 color-black'>
         Пиломатериал {lumber.id + 1}
       </InputLabel>
+
+      <div className='d-flex justify-content-around my-2'>
+        {woodSpecies.map(woodSpecie =>
+          <button className={woodSpecie[0] === currentWoodSpecies ? filterBtnClass + ' bg-green2-light' 
+            : filterBtnClass} 
+            onClick={() => setCurrentWoodSpecies(woodSpecie[0])}>
+            {woodSpecie[1]}
+          </button>
+        )}
+      </div>
+
+      <div className='d-flex justify-content-around mb-2'>
+        {lumberTypes.map(lumberType =>
+          <button className={lumberType[0] === currentLumberType ? filterBtnClass + ' bg-yellow1-light' 
+            : filterBtnClass} 
+            onClick={() => setCurrentLumberType(lumberType[0])}>
+            {lumberType[1]}
+          </button>
+        )}
+      </div>
+
       <Select 
         native 
         defaultValue="" 
@@ -90,57 +136,29 @@ export function LumbersToSale (props) {
         value={lumber.lumber} onChange={(e) =>setLumberID(e, lumber.id)}
         name='lumber'
         data-id={lumber.id}
-        defaultValue={null}
         onClick={executeScroll}
         >
         <option aria-label="None" />
-        <optgroup label="Брус сосна">
-          {pineBrus.map(pb =>
-            <option value={pb.id} >{`${pb.name} ${pb.wood_species}`} </option>
-            )}
-        </optgroup>
-        <optgroup label="Брус лиственница">
-          {larchBrus.map(lb =>
-            <option value={lb.id} >{`${lb.name} ${lb.wood_species}`} </option>
-            )}
-        </optgroup>
-        {stockType === 'mixed' &&
-          <optgroup label="Доска">
-            {pineDoska.map(pd =>
-              <option value={pd.id} >{`${pd.name} ${pd.wood_species}`} </option>
-              )}
-          </optgroup>
-        }
-        {stockType === 'sorted' && [
-          <optgroup label="Доска сосна">
-            {pineDoska.map(pd =>
-              <option value={pd.id} >{`${pd.name} ${pd.wood_species}`} </option>
-              )}
-          </optgroup>,
-          <optgroup label="Доска лиственница">
-            {larchDoska.map(ld =>
-              <option value={ld.id} >{`${ld.name} ${ld.wood_species}`} </option>
-              )}
-          </optgroup>]
-        }
-
+        <LumberOptGroup woodSpecie={currentWoodSpecies} lumberType={currentLumberType}
+          pineBrus={pineBrus} pineDoska={pineDoska} larchBrus={larchBrus} larchDoska={larchDoska} />
       </Select>
+
       {lumber.lumber > 0 && 
         <div className='mt-2'>
-          <div className='d-flex justify-content-around'>
-            <button className={lumber.calc_type === 'exact' ? 'btn btn-m bg-blue1-light' 
-              : 'btn btn-m border'} 
+          <div className='d-flex justify-content-around my-2'>
+            <button className={lumber.calc_type === 'exact' ? filterBtnClass + ' bg-blue1-light' 
+              : filterBtnClass} 
               onClick={() => turnCalc(lumber.id, 'exact')}>
               счет Т
             </button>
-            <button className={lumber.calc_type === 'round' ? 'btn btn-m bg-blue1-light' 
-              : 'btn btn-m border'}
+            <button className={lumber.calc_type === 'round' ?  filterBtnClass + ' bg-blue1-light' 
+              : filterBtnClass}
               onClick={() => turnCalc(lumber.id, 'round')}>
               счет О
             </button>
             {lumber.china_volume > 0 &&
-              <button className={lumber.calc_type === 'china' ? 'btn btn-m bg-blue1-light' 
-              : 'btn btn-m border'}
+              <button className={lumber.calc_type === 'china' ?  filterBtnClass + ' bg-blue1-light' 
+              : filterBtnClass}
               onClick={() => turnCalc(lumber.id, 'china')}>
                 Китайский счет
             </button>
