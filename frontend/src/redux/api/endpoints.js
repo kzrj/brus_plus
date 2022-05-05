@@ -1,4 +1,6 @@
-export const url = 'http://77.222.54.200';
+// export const url = 'http://77.222.54.200';
+// export const url = 'http://192.168.10.94:8000';
+export const url = 'http://192.168.0.49:8000';
 export const apiUrl = `${url}/api`;
 
 export default {

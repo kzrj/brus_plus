@@ -36,10 +36,10 @@ export function MenuItem (props) {
   )
 }
 
-function RamaMenu (props) {
-  const { user, ramaToSee } = props
+function ShopMenu (props) {
+  const { user, shopToSee } = props
   let manager_access = false
-  if (user.is_manager && user.rama_id === ramaToSee.id) {
+  if (user.is_manager && user.shop_id === shopToSee.id) {
     manager_access = true
   }
 
@@ -50,7 +50,7 @@ function RamaMenu (props) {
         <MenuItem title={'Склад. Текущие остатки'} to={'/manager/stock/'}/>
       </div>
 
-      {user.can_see_rama_raw_stock.includes(ramaToSee.id) &&
+      {user.can_see_shop_raw_stock.includes(shopToSee.id) &&
         <div className='my-4'>
           <h3 className='text-center'>Круглый лес и план</h3>
           {manager_access && 
@@ -60,7 +60,7 @@ function RamaMenu (props) {
         </div>
       }
 
-      {user.can_see_rama_shift.includes(ramaToSee.id) &&
+      {user.can_see_shop_shift.includes(shopToSee.id) &&
         <div className='my-4'>
           <h3 className='text-center'>Смены</h3>
             <MenuItem title={'Смены список'} to={'/manager/shift_list/'}/>
@@ -70,13 +70,13 @@ function RamaMenu (props) {
         </div>
       }
 
-      {user.can_see_rama_resaws.includes(ramaToSee.id) &&
+      {user.can_see_shop_resaws.includes(shopToSee.id) &&
         <div className='my-4'>
          <MenuItem title={'Перепил'} to={'/manager/resaws/create/'}/>
         </div>
       }
       
-      {user.can_see_rama_sales.includes(ramaToSee.id) &&
+      {user.can_see_shop_sales.includes(shopToSee.id) &&
         <div className='my-4'>
           <h3 className='text-center'>Продажи</h3>
           {manager_access &&
@@ -87,7 +87,7 @@ function RamaMenu (props) {
         </div>
       }
 
-      {user.can_see_rama_cash.includes(ramaToSee.id) &&
+      {user.can_see_shop_cash.includes(shopToSee.id) &&
         <div className='my-4'>
           <h3 className='text-center'>Отчеты и расходы</h3>
           {manager_access && [
@@ -103,20 +103,20 @@ function RamaMenu (props) {
 }
 
 function AfterLogin (props) {
-  const { user, setRamaToSee, ramaToSee } = props
+  const { user, setShopToSee, shopToSee } = props
 
   if (user.is_ramshik) 
     return <Redirect to="/ramshik/main" />
   
-  if (user.can_see_rama_stock) {
+  if (user.can_see_shop_stock) {
       return (
-        ramaToSee.id 
-        ? <RamaMenu user={user} ramaToSee={ramaToSee}/>
+        shopToSee.id 
+        ? <ShopMenu user={user} shopToSee={shopToSee}/>
         : <div className='my-3'>
-          {user.can_see_rama_stock.map(rama => 
-            <div className='card card-style' onClick={() => setRamaToSee(rama)}>
+          {user.can_see_shop_stock.map(shop => 
+            <div className='card card-style' onClick={() => setShopToSee(shop)}>
               <div className='content'>
-                <h4 className='text-center'>{rama.name}</h4>
+                <h4 className='text-center'>{shop.name}</h4>
               </div>
             </div>
             )}
@@ -145,13 +145,13 @@ class Main extends Component {
   }
 
   render() {
-    const { isLoggedIn, fetching, user, ramaToSee } = this.props.state.auth
+    const { isLoggedIn, fetching, user, shopToSee } = this.props.state.auth
     return (
       fetching 
         ? <CircularProgress />
         : isLoggedIn 
-            ? <AfterLogin user={user} logout={this.props.logout} setRamaToSee={this.props.setRamaToSee}
-                ramaToSee={ramaToSee}/>
+            ? <AfterLogin user={user} logout={this.props.logout} setShopToSee={this.props.setShopToSee}
+                shopToSee={shopToSee}/>
             : <LoginForm parentSubmit={this.login} />
     )
   }
@@ -167,7 +167,7 @@ const mapDispatchToProps = (dispatch) => ({
   login: (payload) => dispatch(AuthActions.loginRequest(payload)),
   logout: (payload) => dispatch(AuthActions.logoutRequest(payload)),
   checkToken: (token) => dispatch(AuthActions.checkTokenRequest(token)),
-  setRamaToSee: (rama) => dispatch(AuthActions.setRamaToSee(rama))
+  setShopToSee: (shop) => dispatch(AuthActions.setShopToSee(shop))
 })
 
 export default connect(

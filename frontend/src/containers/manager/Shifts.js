@@ -34,7 +34,7 @@ export class ManagerShiftList extends Component {
     yesterday.setDate(today. getDate() - 1);
     let startDate = jsDateTimeToStrDate(yesterday)
     let endDate = jsDateTimeToStrDate(today)
-    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id, 
+    const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id, 
       date_before: endDate, date_after:startDate});
     axios({
       method: 'get',
@@ -55,7 +55,7 @@ export class ManagerShiftList extends Component {
 
   showResults () {
     const token = localStorage.getItem('token');
-    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id, 
+    const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id, 
       date_before: this.state.endDate, date_after: this.state.startDate});
     axios({
       method: 'get',
@@ -99,7 +99,7 @@ export class ManagerShiftList extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user,
-  ramaToSee: state.auth.ramaToSee,
+  shopToSee: state.auth.shopToSee,
   state: state
 });
 

@@ -26,12 +26,14 @@ services:
     depends_on:
       - db
       # - nginx
-    # command: bash -c "cd batorama &&
+
+    # restart: unless-stopped
+
+    # command: bash -c "
     #                   python manage.py migrate &&
     #                   python manage.py makemigrations --no-input &&
-    #                   python manage.py test rawstock.tests.test_selectors_quota"
+    #                   python manage.py test"
 
-    restart: unless-stopped
     command: bash -c "
                       python manage.py makemigrations --no-input &&
                       python manage.py migrate &&
@@ -44,4 +46,4 @@ services:
     volumes:
       - ../shops_app:/code
     ports:
-      - "8000"
+      - "8000:8000"

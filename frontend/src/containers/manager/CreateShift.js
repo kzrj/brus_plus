@@ -61,15 +61,6 @@ export class ShiftCreateComponent extends Component {
 
   calcRow (lumber, qnty, moreThan10) {
     let rate = lumber.employee_rate
-    // if (lumber.employee_rate !== 800 && lumber.employee_rate !== 300) {
-    //   if (moreThan10) {
-    //     if (lumber.wood_species === 'pine') rate = 650
-    //     if (lumber.wood_species === 'larch') rate = 700
-    //   } else {
-    //     if (lumber.wood_species === 'pine') rate = 600
-    //     if (lumber.wood_species === 'larch') rate = 650
-    //   }
-    // }
 
     let calcLumber = {
       ...lumber,
@@ -105,18 +96,18 @@ export class ShiftCreateComponent extends Component {
 
   calcRowAndTotal (e, lumber) {
     let { lumbers } = this.state
-    let calcLumber = this.calcRow(lumber, e.target.value, false)
+    let calcLumber = this.calcRow(lumber, e.target.value)
     lumbers = replaceItemInDictArrayById(lumbers, calcLumber)
 
     let totalVolume = this.calcTotalVolume(lumbers)
     if (totalVolume >= 10) {
       lumbers.map((lmbr, idx) => {
-        lumbers[idx] = this.calcRow(lmbr, lmbr.quantity, true)
+        lumbers[idx] = this.calcRow(lmbr, lmbr.quantity)
       })
       totalVolume = this.calcTotalVolume(lumbers)
     } else {
       lumbers.map((lmbr, idx) => {
-        lumbers[idx] = this.calcRow(lmbr, lmbr.quantity, false)
+        lumbers[idx] = this.calcRow(lmbr, lmbr.quantity)
       })
       totalVolume = this.calcTotalVolume(lumbers)
     }
@@ -274,7 +265,7 @@ export class ShiftCreateComponent extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user,
-  ramaToSee: state.auth.ramaToSee,
+  shopToSee: state.auth.shopToSee,
   state: state
 });
 

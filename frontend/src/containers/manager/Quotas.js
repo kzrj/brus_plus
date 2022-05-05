@@ -94,7 +94,7 @@ class QuotaOverview extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id});
+    const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id});
     axios({
       method: 'get',
       url: endpoints.QUOTAS,
@@ -115,7 +115,7 @@ class QuotaOverview extends Component {
     const { amount } = this.state
     const token = localStorage.getItem('token');
     const formData = new FormData();
-    formData.append("rama", this.props.ramaToSee.id);
+    formData.append("shop", this.props.shopToSee.id);
     formData.append("amount", amount);
         
     axios({
@@ -208,7 +208,7 @@ class QuotaOverview extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user,
-  ramaToSee: state.auth.ramaToSee,
+  shopToSee: state.auth.shopToSee,
   state: state
 })
 

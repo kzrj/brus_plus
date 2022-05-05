@@ -109,7 +109,7 @@ export class ExpensesContainer extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user,
-  ramaToSee: state.auth.ramaToSee,
+  shopToSee: state.auth.shopToSee,
   state: state
 })
 

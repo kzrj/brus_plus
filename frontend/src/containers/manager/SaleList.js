@@ -10,8 +10,8 @@ import { DateFilter } from '../../components/CommonForms';
 
 
 export function SalesTable (props) {
-  const { sales, totals, deleteSale, rama } = props
-  console.log(rama)
+  const { sales, totals, deleteSale, shop } = props
+  console.log(shop)
 
   return (
     <table className='table table-sm table-responsive'>
@@ -20,7 +20,7 @@ export function SalesTable (props) {
         <th>Пиломат</th>
         <th>Сумма/Объем</th>
         <th style={{lineHeight: '13px'}}>
-        {rama.sale_type === 'seller_kladman_same' 
+        {shop.sale_type === 'seller_kladman_same' 
           ? 'Продавeц (комиссия кладмэна из вознаграждения продавца)'
           : 'Продавeц'
         }
@@ -48,9 +48,9 @@ export function SalesTable (props) {
                   <span className='d-block font-italic'>розница 1м3 <span className='font-500'>
                     {lumber.selling_price}</span></span>
                   <span className='d-block font-italic'>опт общ <span className='font-500'>
-                    {lumber.rama_total_cash}</span></span>
+                    {lumber.shop_total_cash}</span></span>
                   <span className='d-block font-italic'>опт 1м3 <span className='font-500'>
-                    {lumber.rama_price}</span></span>
+                    {lumber.shop_price}</span></span>
                 </span>
                 )}
             </td>
@@ -59,7 +59,7 @@ export function SalesTable (props) {
               <span className='d-block'>{sale.volume} м3</span>
             </td>
             <td style={{lineHeight: '15px'}}>
-              {rama.sale_type === 'seller_kladman_same' 
+              {shop.sale_type === 'seller_kladman_same' 
                 ? <span className='d-block'>
                     <span className='d-block'>{sale.seller_fee - sale.kladman_fee}</span>
                     {`(${sale.seller_fee}  - ${sale.kladman_fee})`}
@@ -87,7 +87,7 @@ export function SalesTable (props) {
           <td>-</td>
           <td>{totals.total_selling_cash}</td>
           <td>
-            {rama.sale_type === 'seller_kladman_same' 
+            {shop.sale_type === 'seller_kladman_same' 
              ? <span>
                   <span className='d-block'>{totals.total_seller_fee - totals.total_kladman_fee}</span>
                   {`(${totals.total_seller_fee}  - ${totals.total_kladman_fee})`}
@@ -133,7 +133,7 @@ export class SaleList extends Component {
     // yesterday.setDate(today. getDate() - 1);
     let startDate = jsDateTimeToStrDate(yesterday)
     let endDate = jsDateTimeToStrDate(today)
-    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id, 
+    const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id, 
       date_before: endDate, date_after:startDate});
 
     axios({
@@ -169,7 +169,7 @@ export class SaleList extends Component {
 
   showResults () {
     const token = localStorage.getItem('token');
-    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id, 
+    const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id, 
       date_before: this.state.endDate, date_after: this.state.startDate});
     axios({
       method: 'get',
@@ -197,7 +197,7 @@ export class SaleList extends Component {
             <h4 className='mb-2'>Продажи ({saleList.length})</h4>
             {saleList.length > 0 
               ? <SalesTable sales={saleList} totals={totals} deleteSale={this.deleteSale}
-                  rama={this.props.ramaToSee} />
+                  shop={this.props.shopToSee} />
               : <h5>Нет продаж</h5>
             }
           </div>
@@ -211,7 +211,7 @@ export class SaleList extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user,
-  ramaToSee: state.auth.ramaToSee,
+  shopToSee: state.auth.shopToSee,
   state: state
 });
 

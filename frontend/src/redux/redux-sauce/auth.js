@@ -32,7 +32,7 @@ const { Types, Creators } = createActions({
   checkAuthSuccess: ['payload'],
   checkAuthFail: null,
 
-  setRamaToSee: ['rama'],
+  setShopToSee: ['shop'],
 })
 
 export const AuthTypes = Types
@@ -46,7 +46,7 @@ export const INITIAL_STATE = Immutable({
   error: '',
   isLoggedIn: false,
   isLoggingIn: false,
-  ramaToSee: {},
+  shopToSee: {},
 })
 
 /* ------------- Selectors ------------- */
@@ -57,14 +57,14 @@ export const AuthSelectors = {
 
 /* ------------- Reducers ------------- */
 
-// rama to see
-export const setRamaToSee = (state, { rama }) => {
-  return state.merge({ ramaToSee: rama })
+// shop to see
+export const setShopToSee = (state, { shop }) => {
+  return state.merge({ shopToSee: shop })
 }
 
 // login request
 export const loginRequest = (state, { data }) => {
-  return state.merge({ fetching: true, user: null, isLoggingIn: true, isLoggedIn: false, ramaToSee: {} })
+  return state.merge({ fetching: true, user: null, isLoggingIn: true, isLoggedIn: false, shopToSee: {} })
 }
   
 
@@ -138,7 +138,7 @@ export const checkAuthSuccess = (state, { payload }) => {
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.SET_RAMA_TO_SEE]: setRamaToSee,
+  [Types.SET_SHOP_TO_SEE]: setShopToSee,
 
   [Types.LOGIN_REQUEST]: loginRequest,
   [Types.LOGIN_SUCCESS]: loginSuccess,

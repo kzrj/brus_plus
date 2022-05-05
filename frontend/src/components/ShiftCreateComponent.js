@@ -13,11 +13,16 @@ function FilteredLumberTr (props) {
       </td>
       <td className='w-25'>
         <input style={{'color': '#6c6c6c'}}
-        type='number' className='w-75' onChange={(e) => calcRowAndTotal(e, lumber)} 
-        value={lumber.quantity > 0 && lumber.quantity}/>
+          type='number' className='w-75' onChange={(e) => calcRowAndTotal(e, lumber)} 
+          value={lumber.quantity > 0 && lumber.quantity}/>
       </td>
       <td>{lumber.volume_total > 0 && lumber.volume_total.toFixed(4) + ' м3'}</td>
-      <td>{lumber.employee_rate} руб</td>
+      <td>
+        <input style={{'color': '#6c6c6c'}}
+          type='number' className='w-75' onChange={(e) => calcRowAndTotal(e, lumber)} 
+          value={lumber.quantity > 0 && lumber.quantity}/>
+        {/* {lumber.employee_rate} руб */}
+      </td>
       <td>{lumber.cash > 0 && lumber.cash.toFixed(0) + ' руб'}</td>
     </tr>
   
@@ -173,11 +178,11 @@ export function CreatedShift (props) {
             <p className={rowClass}>
               Объем общий: {shift.volume.toFixed(2)}  ({shift.back_calc_volume.toFixed(2)}) м3</p>
             <p className={rowClass}>
-              Общая сумма за работу: {shift.employee_cash.toFixed(1)} ({shift.back_calc_cash.toFixed(1)}) 
+              Общая сумма за работу: {shift.employee_cash && shift.employee_cash.toFixed(1)} ({shift.back_calc_cash.toFixed(1)}) 
               рублей</p>
             <p className={rowClass}>
-              Сумма на одного человека: {shift.cash_per_employee.toFixed(1)}
-              ({shift.back_calc_cash_per_employee.toFixed(1)}) рублей</p>
+              Сумма на одного человека: {shift.cash_per_employee && shift.cash_per_employee.toFixed(1)}
+              ({shift.back_calc_cash_per_employee && shift.back_calc_cash_per_employee.toFixed(1)}) рублей</p>
             <p className={rowClass}>Примечание: {shift.note}</p>
 
             <LumberTable lumbers={shift.lumber_records}/>

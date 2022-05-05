@@ -11,7 +11,7 @@ import { getObjectbyId } from '../utils';
 
 
 function LumberInputs (props) {
-  const { lumber, calcRowQnty, calcRowVolume, calcRowCash, setRamaPrice, label } = props
+  const { lumber, calcRowQnty, calcRowVolume, calcRowCash, setShopPrice, label } = props
   return (
     <div className=''>
       <h5>{label}:</h5>
@@ -60,8 +60,8 @@ function LumberInputs (props) {
           disabled
           label='Цена за 1м3 опт'
           type='number'
-          onChange={(e) => setRamaPrice(e, lumber.id)}
-          value={lumber.rama_price > 0 && lumber.rama_price}/>
+          onChange={(e) => setShopPrice(e, lumber.id)}
+          value={lumber.shop_price > 0 && lumber.shop_price}/>
       </div>
     </div>
   )
@@ -70,7 +70,7 @@ function LumberInputs (props) {
 
 export function LumbersToSale (props) {
   const { lumber, setLumberID, calcRowQnty, calcRowCash, pineBrus,  pineDoska, turnCalc, delLumber, larchBrus,
-     calcRoundRowQnty, calcRowVolume, calcRoundRowVolume, calcChinaRowQnty, calcChinaRowVolume, setRamaPrice,
+     calcRoundRowQnty, calcRowVolume, calcRoundRowVolume, calcChinaRowQnty, calcChinaRowVolume, setShopPrice,
      stockType, larchDoska } = props
 
   const lumberRef = useRef(null);
@@ -153,7 +153,7 @@ export function LumbersToSale (props) {
               calcRowQnty={calcRowQnty} 
               calcRowVolume={calcRowVolume}
               calcRowCash={calcRowCash}
-              setRamaPrice={setRamaPrice}
+              setShopPrice={setShopPrice}
             />
           }
           {lumber.calc_type === 'round' &&
@@ -163,7 +163,7 @@ export function LumbersToSale (props) {
               calcRowQnty={calcRoundRowQnty} 
               calcRowVolume={calcRoundRowVolume}
               calcRowCash={calcRowCash}
-              setRamaPrice={setRamaPrice}
+              setShopPrice={setShopPrice}
             />            
           }
           {lumber.calc_type === 'china' &&
@@ -173,7 +173,7 @@ export function LumbersToSale (props) {
               calcRowQnty={calcChinaRowQnty} 
               calcRowVolume={calcChinaRowVolume}
               calcRowCash={calcRowCash}
-              setRamaPrice={setRamaPrice}
+              setShopPrice={setShopPrice}
             />            
           }
         </div>}

@@ -19,14 +19,14 @@ function HeaderComp (props) {
   }
 
   function toMain () {
-    props.setRamaToSee({})
+    props.setShopToSee({})
     histoty.push('/')
   }
 
   return (
     <div className='d-flex justify-content-between align-items-baseline px-3 py-2'>
-      <h4 onClick={handleClickMenu}>{props.ramaToSee.name}</h4>
-      {props.ramaToSee.name 
+      <h4 onClick={handleClickMenu}>{props.shopToSee.name}</h4>
+      {props.shopToSee.name 
           ? <h6 onClick={toMain}>к списку пилорам</h6>
           : <h4>Пилорамы</h4>
         }
@@ -56,13 +56,13 @@ class Header extends Component {
   }
 
   render() {
-    const { isLoggedIn, fetching, user, ramaToSee } = this.props.auth
+    const { isLoggedIn, fetching, user, shopToSee } = this.props.auth
 
     return (
       user
       ? <div className='header' >
-          <HeaderComp logout={this.props.logout} user={user} ramaToSee={ramaToSee} 
-            setRamaToSee={this.props.setRamaToSee}/>
+          <HeaderComp logout={this.props.logout} user={user} shopToSee={shopToSee} 
+            setShopToSee={this.props.setShopToSee}/>
         </div>
       : 'net login'
     )
@@ -78,7 +78,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   checkToken: (token) => dispatch(AuthActions.checkTokenRequest(token)),
   logout: () => dispatch(AuthActions.logoutRequest()),
-  setRamaToSee: (rama) => dispatch(AuthActions.setRamaToSee(rama))
+  setShopToSee: (shop) => dispatch(AuthActions.setShopToSee(shop))
 })
 
 export default connect(

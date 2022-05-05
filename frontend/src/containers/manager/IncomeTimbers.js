@@ -82,7 +82,7 @@ export class ManagerIncomeTimbersList extends Component {
     yesterday.setDate(today. getDate() - 1);
     let startDate = jsDateTimeToStrDate(yesterday)
     let endDate = jsDateTimeToStrDate(today)
-    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id, 
+    const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id, 
       created_at_before: endDate, created_at_after:startDate});
     axios({
       method: 'get',
@@ -103,7 +103,7 @@ export class ManagerIncomeTimbersList extends Component {
 
   showResults () {
     const token = localStorage.getItem('token');
-    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id, 
+    const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id, 
       created_at_before: this.state.endDate, created_at_after: this.state.startDate});
     axios({
       method: 'get',
@@ -148,7 +148,7 @@ export class ManagerIncomeTimbersList extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user,
-  ramaToSee: state.auth.ramaToSee,
+  shopToSee: state.auth.shopToSee,
   state: state
 });
 

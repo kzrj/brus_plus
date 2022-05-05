@@ -61,7 +61,7 @@ export class ResawContainer extends Component {
       method: 'get',
       url: endpoints.RESAWS,
       headers: { 'Authorization': `JWT ${token}` },
-      params: createUrlParamsFromFilters({rama: this.props.ramaToSee.id})
+      params: createUrlParamsFromFilters({shop: this.props.shopToSee.id})
     })
     .then(res => {
       const initData = res.data;
@@ -85,7 +85,7 @@ export class ResawContainer extends Component {
       lumber_in_quantity: lumber_in_quantity,
       lumber_out: lumber_out,
       lumber_out_quantity: lumber_out_quantity,
-      rama: this.props.ramaToSee.id
+      shop: this.props.shopToSee.id
     }
 
     this.setState({
@@ -134,7 +134,7 @@ export class ResawContainer extends Component {
  
   render() {
     const { createdResaw, dataToSave, message, resawsList } = this.state
-    const { user, ramaToSee } = this.props
+    const { user, shopToSee } = this.props
     return (
       <div className=''>
         {createdResaw
@@ -187,7 +187,7 @@ export class ResawContainer extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user,
-  ramaToSee: state.auth.ramaToSee,
+  shopToSee: state.auth.shopToSee,
   state: state
 });
 

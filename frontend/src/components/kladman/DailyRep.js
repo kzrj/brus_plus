@@ -79,7 +79,7 @@ export function CashRecordsList (props) {
                 -{record.amount} р
               </td>
             }
-            {record.record_type == 'rama_expenses' &&
+            {record.record_type == 'shop_expenses' &&
               <td className='text-nowrap color-red1-light'>
                 -{record.amount} р
               </td>

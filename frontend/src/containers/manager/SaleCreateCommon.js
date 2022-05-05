@@ -57,7 +57,7 @@ export class SaleCreateCommonContainer extends Component {
     this.calcChinaRowQnty = this.calcChinaRowQnty.bind(this);
     this.calcChinaRowVolume = this.calcChinaRowVolume.bind(this);
 
-    this.setRamaPrice = this.setRamaPrice.bind(this);
+    this.setShopPrice = this.setShopPrice.bind(this);
 
     this.setAddParams = this.setAddParams.bind(this);
     this.setChinaVira = this.setChinaVira.bind(this);
@@ -72,7 +72,7 @@ export class SaleCreateCommonContainer extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    const params = createUrlParamsFromFilters({stock_type: this.props.user.rama_type});
+    const params = createUrlParamsFromFilters({stock_type: this.props.user.shop_type});
     
     axios({
       method: 'get',
@@ -234,10 +234,10 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  setRamaPrice (e, id) {
+  setShopPrice (e, id) {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
-    lumber.rama_price =  e.target.value ? parseFloat(e.target.value) : 0
+    lumber.shop_price =  e.target.value ? parseFloat(e.target.value) : 0
     lumbersToSale = replaceItemInDictArrayById(lumbersToSale, lumber)
     
     this.setState({
@@ -386,7 +386,7 @@ export class SaleCreateCommonContainer extends Component {
                   <h3>Что продаем?</h3> 
                   {lumbersToSale.length > 0  && lumbersToSale.map(lumber => lumber &&
                     <LumbersToSale
-                      stockType={this.props.user.rama_type}
+                      stockType={this.props.user.shop_type}
                       lumber={lumber} 
                       setLumberID={this.setLumberID} 
 
@@ -400,7 +400,7 @@ export class SaleCreateCommonContainer extends Component {
                       calcChinaRowQnty={this.calcChinaRowQnty}
                       calcChinaRowVolume={this.calcChinaRowVolume}
 
-                      setRamaPrice={this.setRamaPrice}
+                      setShopPrice={this.setShopPrice}
 
                       turnCalc={this.turnCalc}
                       delLumber={this.delLumber}

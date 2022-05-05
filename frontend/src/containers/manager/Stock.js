@@ -38,10 +38,10 @@ function TrRow (props) {
           {user.is_boss &&
             <TextField type='number' 
               className=''
-              value={lumber.market_cost > 0 && lumber.market_cost} 
+              value={lumber.shop_rate > 0 && lumber.shop_rate} 
               onChange={(e) => changeMarketCost(e, lumber.id)}/>
           }
-          {user.is_kladman && <span className='font-16'>{lumber.market_cost}</span>}
+          {user.is_kladman && <span className='font-16'>{lumber.shop_rate}</span>}
         </td>
         <td>
           <span className='font-16'>
@@ -67,8 +67,8 @@ export class ManagerStock extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    // console.log(this.props.ramaToSee)
-    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id});
+    // console.log(this.props.shopToSee)
+    const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id});
     axios({
       method: 'get',
       url: endpoints.STOCK,
@@ -90,7 +90,7 @@ export class ManagerStock extends Component {
       url: endpoints.MANAGER_STOCK_SET_LUMBER_PRICE,
       data: {
         lumber: lumberId,
-        market_cost: parseInt(e.target.value) || 0
+        shop_rate: parseInt(e.target.value) || 0
       },
       headers: {'content-type': 'application/JSON', 'Authorization': `JWT ${token}` }
     })
@@ -98,8 +98,8 @@ export class ManagerStock extends Component {
       lumber = res.data;
     })
 
-    lumber.market_cost = parseInt(e.target.value) || 0
-    lumber.stock_total_cash = lumber.market_cost * lumber.current_stock_volume
+    lumber.shop_rate = parseInt(e.target.value) || 0
+    lumber.stock_total_cash = lumber.shop_rate * lumber.current_stock_volume
 
     lumbers = replaceItemInDictArrayById(lumbers, lumber)
     this.setState({
@@ -172,7 +172,7 @@ export class ManagerStock extends Component {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
-  ramaToSee: state.auth.ramaToSee
+  shopToSee: state.auth.shopToSee
 })
 
 const mapDispatchToProps = (dispatch) => ({

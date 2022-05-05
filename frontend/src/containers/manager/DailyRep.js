@@ -37,7 +37,7 @@ export class DailyRepContainer extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    const params = createUrlParamsFromFilters({date: getToday(), rama: this.props.ramaToSee.id});
+    const params = createUrlParamsFromFilters({date: getToday(), shop: this.props.shopToSee.id});
     
     axios({
       method: 'get',
@@ -91,7 +91,7 @@ export class DailyRepContainer extends Component {
 
   showResults () {
     const token = localStorage.getItem('token');
-    const params = createUrlParamsFromFilters({rama: this.props.ramaToSee.id, date: this.state.date});
+    const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id, date: this.state.date});
     axios({
       method: 'get',
       url: endpoints.DAILY_REP,
@@ -146,7 +146,7 @@ export class DailyRepContainer extends Component {
 const mapStateToProps = (state) => ({
   isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user,
-  ramaToSee: state.auth.ramaToSee,
+  shopToSee: state.auth.shopToSee,
   state: state
 });
 
