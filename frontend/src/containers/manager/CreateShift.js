@@ -31,7 +31,6 @@ export class ShiftCreateComponent extends Component {
       error: null,
     }
 
-    this.calcRow = this.calcRow.bind(this);
     this.calcRowAndTotal = this.calcRowAndTotal.bind(this);
     this.calcTotalVolume = this.calcTotalVolume.bind(this)
     this.calcTotalCash = this.calcTotalCash.bind(this)
@@ -59,15 +58,25 @@ export class ShiftCreateComponent extends Component {
       })
   }
 
-  calcRow (lumber, qnty, moreThan10) {
-    let rate = lumber.employee_rate
-
+  calcRowQuantity = (lumber, qnty) => {
     let calcLumber = {
       ...lumber,
       lumber: lumber.id,
       quantity: qnty,
       volume_total: qnty * lumber.volume,
-      cash: qnty * lumber.volume * rate,
+      cash: qnty * lumber.volume * lumber.employee_rate,
+      employee_rate: lumber.employee_rate
+    }
+    return calcLumber
+  }
+
+  calcRowRate = (lumber, rate) => {
+    let calcLumber = {
+      ...lumber,
+      lumber: lumber.id,
+      quantity: lumber.quantity,
+      volume_total: lumber.quantity * lumber.volume,
+      cash: lumber.quantity * lumber.volume * rate,
       employee_rate: rate
     }
     return calcLumber
@@ -96,21 +105,17 @@ export class ShiftCreateComponent extends Component {
 
   calcRowAndTotal (e, lumber) {
     let { lumbers } = this.state
-    let calcLumber = this.calcRow(lumber, e.target.value)
+    let calcLumber
+    if (e.target.name === 'quantity') {
+      calcLumber = this.calcRowQuantity(lumber, e.target.value)
+    }
+    if (e.target.name === 'rate') {
+      calcLumber = this.calcRowRate(lumber, e.target.value)
+    }
+
     lumbers = replaceItemInDictArrayById(lumbers, calcLumber)
 
     let totalVolume = this.calcTotalVolume(lumbers)
-    if (totalVolume >= 10) {
-      lumbers.map((lmbr, idx) => {
-        lumbers[idx] = this.calcRow(lmbr, lmbr.quantity)
-      })
-      totalVolume = this.calcTotalVolume(lumbers)
-    } else {
-      lumbers.map((lmbr, idx) => {
-        lumbers[idx] = this.calcRow(lmbr, lmbr.quantity)
-      })
-      totalVolume = this.calcTotalVolume(lumbers)
-    }
 
     let totalCash = this.calcTotalCash(lumbers)
     

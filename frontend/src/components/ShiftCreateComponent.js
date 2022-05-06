@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 function FilteredLumberTr (props) {
   const { lumber, calcType, calcRowAndTotal, key } = props
+  console.log(lumber)
   let tr = 
     <tr key={key}>
       <td>
@@ -13,15 +14,16 @@ function FilteredLumberTr (props) {
       </td>
       <td className='w-25'>
         <input style={{'color': '#6c6c6c'}}
+          name='quantity'
           type='number' className='w-75' onChange={(e) => calcRowAndTotal(e, lumber)} 
           value={lumber.quantity > 0 && lumber.quantity}/>
       </td>
       <td>{lumber.volume_total > 0 && lumber.volume_total.toFixed(4) + ' м3'}</td>
       <td>
         <input style={{'color': '#6c6c6c'}}
-          type='number' className='w-75' onChange={(e) => calcRowAndTotal(e, lumber)} 
-          value={lumber.quantity > 0 && lumber.quantity}/>
-        {/* {lumber.employee_rate} руб */}
+          name='rate'
+          type='number' className='w-100' onChange={(e) => calcRowAndTotal(e, lumber)} 
+          value={lumber.employee_rate > 0 && lumber.employee_rate}/>
       </td>
       <td>{lumber.cash > 0 && lumber.cash.toFixed(0) + ' руб'}</td>
     </tr>
