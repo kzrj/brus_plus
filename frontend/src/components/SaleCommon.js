@@ -1,4 +1,4 @@
-import React, { useRef, useState  } from 'react';
+import React, { useState, useRef  } from 'react';
 
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select'
@@ -7,11 +7,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { getObjectbyId } from '../utils';
+import { getObjectbyId } from './utils';
 
 
 function LumberInputs (props) {
-  const { lumber, calcRowQnty, calcRowVolume, calcRowCash, setShopPrice, label } = props
+  const { lumber, calcRowQnty, calcRowVolume, calcRowCash, setRamaPrice, label } = props
   return (
     <div className=''>
       <h5>{label}:</h5>
@@ -60,15 +60,14 @@ function LumberInputs (props) {
           disabled
           label='Цена за 1м3 опт'
           type='number'
-          onChange={(e) => setShopPrice(e, lumber.id)}
-          value={lumber.shop_price > 0 && lumber.shop_price}/>
+          onChange={(e) => setRamaPrice(e, lumber.id)}
+          value={lumber.rama_price > 0 && lumber.rama_price}/>
       </div>
     </div>
   )
 }
 
-
-function LumberOptGroup (props) {
+export function LumberOptGroup (props) {
   const { woodSpecie, lumberType, pineBrus, pineDoska, larchBrus, larchDoska } = props
   let lumberOptions = []
   if (woodSpecie === 'pine' && lumberType === 'brus') lumberOptions = pineBrus
@@ -85,14 +84,15 @@ function LumberOptGroup (props) {
   )
 }
 
+
 export function LumbersToSale (props) {
   const { lumber, setLumberID, calcRowQnty, calcRowCash, pineBrus,  pineDoska, turnCalc, delLumber, larchBrus,
-     calcRoundRowQnty, calcRowVolume, calcRoundRowVolume, calcChinaRowQnty, calcChinaRowVolume, setShopPrice,
+     calcRoundRowQnty, calcRowVolume, calcRoundRowVolume, calcChinaRowQnty, calcChinaRowVolume, setRamaPrice,
      stockType, larchDoska } = props
 
   const lumberRef = useRef(null);
   const executeScroll = () => lumberRef.current.scrollIntoView()
-  
+
   const woodSpecies = [['pine', 'сосна'], ['larch', 'лиственница']]
   const [currentWoodSpecies, setCurrentWoodSpecies] = useState('pine');
 
@@ -100,10 +100,10 @@ export function LumbersToSale (props) {
   const [currentLumberType, setCurrentLumberType] = useState('brus');
 
   const filterBtnClass = 'btn btn-m border w-100 mx-2'
-  
+
   return (
     <div className='mt-2 mb-3 px-2 py-3 bg-white rounded-m border' ref={lumberRef}>
-      <InputLabel htmlFor="grouped-native-select" className='font-19 font-600 color-black'>
+      <InputLabel htmlFor="grouped-native-select" className='text-center font-19 font-600 color-black'>
         Пиломатериал {lumber.id + 1}
       </InputLabel>
 
@@ -145,20 +145,20 @@ export function LumbersToSale (props) {
 
       {lumber.lumber > 0 && 
         <div className='mt-2'>
-          <div className='d-flex justify-content-around my-2'>
-            <button className={lumber.calc_type === 'exact' ? filterBtnClass + ' bg-blue1-light' 
-              : filterBtnClass} 
+          <div className='d-flex justify-content-around'>
+            <button className={lumber.calc_type === 'exact' ? 'btn btn-m bg-blue1-light' 
+              : 'btn btn-m border'} 
               onClick={() => turnCalc(lumber.id, 'exact')}>
               счет Т
             </button>
-            <button className={lumber.calc_type === 'round' ?  filterBtnClass + ' bg-blue1-light' 
-              : filterBtnClass}
+            <button className={lumber.calc_type === 'round' ? 'btn btn-m bg-blue1-light' 
+              : 'btn btn-m border'}
               onClick={() => turnCalc(lumber.id, 'round')}>
               счет О
             </button>
             {lumber.china_volume > 0 &&
-              <button className={lumber.calc_type === 'china' ?  filterBtnClass + ' bg-blue1-light' 
-              : filterBtnClass}
+              <button className={lumber.calc_type === 'china' ? 'btn btn-m bg-blue1-light' 
+              : 'btn btn-m border'}
               onClick={() => turnCalc(lumber.id, 'china')}>
                 Китайский счет
             </button>
@@ -171,7 +171,7 @@ export function LumbersToSale (props) {
               calcRowQnty={calcRowQnty} 
               calcRowVolume={calcRowVolume}
               calcRowCash={calcRowCash}
-              setShopPrice={setShopPrice}
+              setRamaPrice={setRamaPrice}
             />
           }
           {lumber.calc_type === 'round' &&
@@ -181,7 +181,7 @@ export function LumbersToSale (props) {
               calcRowQnty={calcRoundRowQnty} 
               calcRowVolume={calcRoundRowVolume}
               calcRowCash={calcRowCash}
-              setShopPrice={setShopPrice}
+              setRamaPrice={setRamaPrice}
             />            
           }
           {lumber.calc_type === 'china' &&
@@ -191,7 +191,7 @@ export function LumbersToSale (props) {
               calcRowQnty={calcChinaRowQnty} 
               calcRowVolume={calcChinaRowVolume}
               calcRowCash={calcRowCash}
-              setShopPrice={setShopPrice}
+              setRamaPrice={setRamaPrice}
             />            
           }
         </div>}
@@ -226,7 +226,6 @@ export function SaleCheckList (props) {
             value={seller} 
             onChange={setAddParams}
             name='seller'
-            defaultValue={null}
             >
             <option aria-label="None" />
             {sellers && sellers.length > 0 && sellers.map(s => 
@@ -269,15 +268,6 @@ export function SaleCheckList (props) {
             name='delivery_fee'
             onChange={setAddParams}
             value={delivery_fee > 0 && delivery_fee}/>
-        {/* <TextField 
-            className='pr-2'
-            id="outlined-margin-dense"
-            variant="outlined" 
-            label='Вира(китай)'
-            type='number'
-            name='china_vira'
-            onChange={setChinaVira}
-            value={china_vira > 0 && china_vira}/> */}
       </div>
       <button
         onClick={preSave}
@@ -369,17 +359,13 @@ export function SaleCommonToCreate (props) {
         <h4>Проверяем данные</h4>
         {sale &&
           <div className=''>
-            {/* <p className={rowClass}>Дата: {sale.date}</p> */}
             <p className={rowClass}>Клиент: {sale.client}</p>
             <p className={rowClass}>Объем: {sale.volume.toFixed(4)} м3</p>
             <p className={rowClass}>Грузчик: {sale.loader ? 'да' : "нет"} </p>
             <p className={rowClass}>Бонус складу: {sale.bonus_kladman ? 'да' : 'нет'}</p>
             <p className={rowClass}>Продавец: {seller ? seller.nickname : 'нет'}</p>
             <p className={rowClass}>Доставка: {sale.deliveryFee ? sale.deliveryFee + 'рублей' : 'нет'}</p>
-            {/* {sale.china_vira && <p className={rowClass}>Вира(китай): {sale.china_vira + 'рублей'}</p>} */}
-
             <p className='mb-1 font-17 font-500 color-black'>Сумма: {sale.sale_cash.toFixed(1)} рублей</p>
-
             <LumbersTable lumber_records={sale.raw_records}/>
           </div>
         }

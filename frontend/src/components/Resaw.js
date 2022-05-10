@@ -4,8 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
 
-import { getObjectbyId } from '../utils';
-
+import { getObjectbyId } from './utils';
 
 export function ResawInput (props) {
   const { lumber, quantity, setLumber, pineBrus, pineDoska, larchBrus, larchDoska, label, lumber_input_label } = props
@@ -25,7 +24,6 @@ export function ResawInput (props) {
         value={lumber} 
         onChange={setLumber}
         name={lumber_input_label}
-        defaultValue={null}
         >
         <option aria-label="None" />
         <optgroup label="Брус сосна">
@@ -61,8 +59,6 @@ export function ResawInput (props) {
     </div>
   )
 }
-
-
 
 export function CreatedResaw (props) {
   const { resaw, message } = props
@@ -101,7 +97,6 @@ export function ResawToCreate (props) {
           <div className=''>
             <p className={rowClass}>Перепиливаем : {lumberIn.name} {resaw.lumber_in_quantity} шт</p>
             <p className={rowClass}>Получаем : {lumberOut.name} {resaw.lumber_out_quantity} шт</p>
-            {/* <p className='mb-1 font-17 font-500 color-black'>Сумма: {sale.sale_cash.toFixed(1)} рублей</p> */}
           </div>
         }
         <div className='d-flex justify-content-around'>

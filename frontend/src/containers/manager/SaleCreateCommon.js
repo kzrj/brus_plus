@@ -9,7 +9,7 @@ import { replaceItemInDictArrayById, getObjectbyId, toggleArrayDictById, lodashT
   from '../../components/utils';
 
 import { LumbersToSale, SaleCheckList, SaleCommonToCreate, CreatedSale } 
-  from '../../components/kladman/SaleCommon';
+  from '../../components/SaleCommon';
 
 
 export class SaleCreateCommonContainer extends Component {
@@ -43,31 +43,6 @@ export class SaleCreateCommonContainer extends Component {
       totalVolume: 0
       
     }
-    this.addLumberToSale = this.addLumberToSale.bind(this);
-    this.setLumberID = this.setLumberID.bind(this);
-    this.turnCalc = this.turnCalc.bind(this);
-
-    this.calcRowQnty = this.calcRowQnty.bind(this);
-    this.calcRowVolume = this.calcRowVolume.bind(this);
-    this.calcRowCash = this.calcRowCash.bind(this);
-    
-    this.calcRoundRowQnty = this.calcRoundRowQnty.bind(this);
-    this.calcRoundRowVolume = this.calcRoundRowVolume.bind(this);
-
-    this.calcChinaRowQnty = this.calcChinaRowQnty.bind(this);
-    this.calcChinaRowVolume = this.calcChinaRowVolume.bind(this);
-
-    this.setShopPrice = this.setShopPrice.bind(this);
-
-    this.setAddParams = this.setAddParams.bind(this);
-    this.setChinaVira = this.setChinaVira.bind(this);
-
-    this.calcTotal = this.calcTotal.bind(this);
-    this.delLumber = this.delLumber.bind(this);
-
-    this.saveData = this.saveData.bind(this);
-    this.preSave = this.preSave.bind(this);
-    this.back = this.back.bind(this);
   }
 
   componentDidMount() {
@@ -94,7 +69,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  addLumberToSale () {
+  addLumberToSale = () => {
     this.setState({
       ...this.state,
       lumbersToSale: [
@@ -104,7 +79,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  setLumberID (e, id) {
+  setLumberID = (e, id) => {
     let { lumbersToSale, lumbers } = this.state
     let lumberData = getObjectbyId(lumbers, e.target.value)
     lumberData = { ...lumberData, id: id, }
@@ -116,7 +91,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  calcRowQnty (e, id) {
+  calcRowQnty = (e, id) => {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
     lumber.quantity =  e.target.value ? parseInt(e.target.value) : 0
@@ -133,7 +108,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  calcRowVolume (e, id) {
+  calcRowVolume = (e, id) => {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
     lumber.volume_total =  e.target.value ? parseFloat(e.target.value) : 0
@@ -150,7 +125,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  calcRowCash (e, id) {
+  calcRowCash = (e, id) => {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
     lumber.selling_price =  e.target.value ? parseInt(e.target.value) : 0
@@ -166,7 +141,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  calcRoundRowQnty (e, id) {
+  calcRoundRowQnty = (e, id) => {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
     lumber.quantity =  e.target.value ? parseInt(e.target.value) : 0
@@ -183,7 +158,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  calcRoundRowVolume (e, id) {
+  calcRoundRowVolume = (e, id) => {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
     lumber.volume_total =  e.target.value ? parseFloat(e.target.value) : 0
@@ -200,7 +175,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  calcChinaRowQnty (e, id) {
+  calcChinaRowQnty = (e, id) => {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
     lumber.quantity =  e.target.value ? parseInt(e.target.value) : 0
@@ -217,7 +192,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  calcChinaRowVolume (e, id) {
+  calcChinaRowVolume = (e, id) => {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
     lumber.volume_total =  e.target.value ? parseFloat(e.target.value) : 0
@@ -234,7 +209,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  setShopPrice (e, id) {
+  setShopPrice = (e, id) => {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
     lumber.shop_price =  e.target.value ? parseFloat(e.target.value) : 0
@@ -245,7 +220,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  turnCalc (id, calcType) {
+  turnCalc = (id, calcType) => {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
 
@@ -263,7 +238,7 @@ export class SaleCreateCommonContainer extends Component {
     }
 
     lumber.calc_type = calcType
-    lumber.selling_total_cash = lumber.volume_total * lumber.selling_price
+    lumber.selling_total_cash = (lumber.volume_total * lumber.selling_price).toFixed(0)
 
     lumbersToSale = replaceItemInDictArrayById(lumbersToSale, lumber)
     const { totalCash, totalVolume } = this.calcTotal(lumbersToSale)
@@ -275,7 +250,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  calcTotal (lumbers) {
+  calcTotal = (lumbers) => {
     let totalCash = 0
     let totalVolume = 0.0
 
@@ -286,7 +261,7 @@ export class SaleCreateCommonContainer extends Component {
     return { totalCash: totalCash.toFixed(0), totalVolume: totalVolume.toFixed(4) }
   }
 
-  delLumber (id) {
+  delLumber = (id) => {
     let { lumbersToSale } = this.state
     let lumber = getObjectbyId(lumbersToSale, id)
     lumbersToSale = toggleArrayDictById(lumbersToSale, lumber)
@@ -299,16 +274,16 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  setAddParams(e) {
+  setAddParams = (e) => {
     if (e.target.name === 'loader' || e.target.name === 'bonus_kladman_label')
       this.setState({[e.target.name]: !this.state[e.target.name]})
     else
       this.setState({[e.target.name]: e.target.value})
   }
 
-  setChinaVira (e) {
+  setChinaVira = (e) => {
     let { lumbersToSale } = this.state
-    let { totalCash, totalVolume } = this.calcTotal(lumbersToSale)
+    let { totalCash } = this.calcTotal(lumbersToSale)
     let china_vira = parseInt(e.target.value)
     if (china_vira > 0)
       totalCash -= china_vira
@@ -319,7 +294,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  preSave () {
+  preSave = () => {
     const { lumbersToSale, loader, seller, bonus_kladman_label, bonus_kladman,
       delivery_fee, totalCash, totalVolume, client, china_vira } = this.state
     let raw_records = []
@@ -347,7 +322,7 @@ export class SaleCreateCommonContainer extends Component {
     })
   }
 
-  saveData () {
+  saveData = () => {
     const { dataToSave } = this.state
     const token = localStorage.getItem('token');
     
@@ -360,15 +335,9 @@ export class SaleCreateCommonContainer extends Component {
     .then(response => {
       this.setState({ message: response.data.message, createdSale: response.data.sale });
     })
-    .catch(err => {
-        // const error = new Error(err);
-        // error.data = parseErrorData(err);
-        this.setState({ message: 'Ошибка' });
-        // throw error;
-    })
   }
 
-  back () {
+  back = () => {
     this.setState({dataToSave: null})
   }
  
@@ -456,9 +425,6 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = dispatch => ({
-  // checkAuth: (groups) => dispatch(authActions.checkAuthRequest(groups))
-  // auth
-  // checkToken: (token) => dispatch(AuthActions.checkTokenRequest(token)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SaleCreateCommonContainer);

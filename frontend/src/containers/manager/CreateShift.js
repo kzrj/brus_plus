@@ -4,9 +4,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import endpoints from '../../redux/api/endpoints';
-import { replaceItemInDictArrayById, toggleArrayDictById, lodashToggle } from '../../components/utils';
-import { parseErrorData } from '../../redux/api/utils';
-import { ShiftToSave, CreatedShift, EmployeesBlock, LumberTableMixed } from '../../components/ShiftCreateComponent';
+import { replaceItemInDictArrayById, lodashToggle } from '../../components/utils';
+import { ShiftToSave, CreatedShift, LumberTableMixed } from '../../components/ShiftCreateComponent';
 
 
 export class ShiftCreateComponent extends Component {
@@ -20,9 +19,6 @@ export class ShiftCreateComponent extends Component {
 
       createdShift: null,
 
-      employees: [],
-      activeEmployees: [],
-
       dataToSave: null,
 
       calcType: 'mixed',
@@ -30,16 +26,6 @@ export class ShiftCreateComponent extends Component {
       message: null,
       error: null,
     }
-
-    this.calcRowAndTotal = this.calcRowAndTotal.bind(this);
-    this.calcTotalVolume = this.calcTotalVolume.bind(this)
-    this.calcTotalCash = this.calcTotalCash.bind(this)
-    this.addEmployee = this.addEmployee.bind(this)
-    this.saveData = this.saveData.bind(this)
-    this.preSave = this.preSave.bind(this)
-    this.back = this.back.bind(this)
-    this.switchCalc = this.switchCalc.bind(this)
-
   }
 
   componentDidMount() {
@@ -48,7 +34,6 @@ export class ShiftCreateComponent extends Component {
       {
         method: 'get',
         url: endpoints.MANAGER_SHIFT_CREATE_DATA,
-        // params: params,
         headers: { 'Authorization': `JWT ${token}` }
       }
     ).then(res => {
@@ -82,18 +67,17 @@ export class ShiftCreateComponent extends Component {
     return calcLumber
   }
 
-  calcTotalVolume (lumbers) {
+  calcTotalVolume = (lumbers) => {
     let totalVolumeVar = 0
 
     lumbers.map(lumber => {
-      if (lumber.employee_rate !== 300)
-        totalVolumeVar = totalVolumeVar + lumber.volume_total
+      totalVolumeVar = totalVolumeVar + lumber.volume_total
     })
 
     return totalVolumeVar
   }
 
-  calcTotalCash (lumbers) {
+  calcTotalCash = (lumbers) => {
     let totalCashVar = 0
 
     lumbers.map(lumber => {
@@ -103,7 +87,7 @@ export class ShiftCreateComponent extends Component {
     return totalCashVar
   }
 
-  calcRowAndTotal (e, lumber) {
+  calcRowAndTotal = (e, lumber) => {
     let { lumbers } = this.state
     let calcLumber
     if (e.target.name === 'quantity') {
@@ -128,19 +112,8 @@ export class ShiftCreateComponent extends Component {
         })
   }
 
-  addEmployee (employee) {
-    let { activeEmployees } = this.state
-    activeEmployees = toggleArrayDictById(activeEmployees, employee)
-    this.setState({
-      ...this.state,
-      activeEmployees: activeEmployees
-    })
-  }
-
-  preSave () {
-    const { lumbers, totalCash, totalVolume, activeEmployees } = this.state
-    let eIds = []
-    activeEmployees.map(emp => eIds = lodashToggle(eIds, emp.id))
+  preSave = () => {
+    const { lumbers, totalCash, totalVolume  } = this.state
     let raw_records = []
     lumbers.map(lumber =>{
       if (lumber.cash > 0 && lumber.quantity > 0) {
@@ -151,11 +124,11 @@ export class ShiftCreateComponent extends Component {
       shift_type: 'day',
       date: null,
       raw_records: raw_records,
-      employees: eIds,
+      employees: [],
       employee_cash: totalCash,
       volume: totalVolume,
-      employeesData: activeEmployees,
-      cash_per_employee: totalCash / eIds.length
+      employeesData: [],
+      cash_per_employee: 0
     }
 
     this.setState({
@@ -164,7 +137,7 @@ export class ShiftCreateComponent extends Component {
     })
   }
 
-  saveData () {
+  saveData = () => {
     const { dataToSave} = this.state
     const token = localStorage.getItem('token');
     axios({
@@ -175,12 +148,6 @@ export class ShiftCreateComponent extends Component {
     })
     .then(response => {
       this.setState({ message: 'Данные записаны.', createdShift: response.data });
-    })
-    .catch(err => {
-        // const error = new Error(err);
-        // error.data = parseErrorData(err);
-        this.setState({ message: 'Ошибка' });
-        // throw error;
     })
 
     this.setState({
@@ -194,11 +161,11 @@ export class ShiftCreateComponent extends Component {
     })
   }
 
-  back () {
+  back = () => {
     this.setState({dataToSave: null})
   }
 
-  switchCalc (calcType) {
+  switchCalc = (calcType) => {
     this.setState({
       lumbers: this.state.initLumbers,
       totalCash: 0,
@@ -209,8 +176,7 @@ export class ShiftCreateComponent extends Component {
   }
 
   render() {
-    const { lumbers, totalVolume, totalCash, employees, activeEmployees, message, createdShift, dataToSave, 
-      calcType}  = this.state
+    const { lumbers, totalVolume, totalCash, message, createdShift, dataToSave, calcType}  = this.state
     return (
       <div>
         {createdShift
@@ -225,9 +191,6 @@ export class ShiftCreateComponent extends Component {
                       <button className={calcType === 'mixed' ? 'btn btn-s bg-highlight' : 'btn btn-s border'}
                         onClick={() => this.switchCalc('mixed')}
                         >доска перемешку</button>
-                      {/* <button className={calcType === 'larch_only' ? 'btn btn-s bg-highlight' : 'btn btn-s border'} 
-                        onClick={() => this.setState({calcType: 'larch_only'})}>
-                        все листвяк</button> */}
                       <button className={calcType === 'sorted' ? 'btn btn-s bg-highlight' : 'btn btn-s border'} 
                         onClick={() => this.switchCalc('sorted')}>
                         доска по сортам</button>
@@ -244,18 +207,10 @@ export class ShiftCreateComponent extends Component {
                     }
                   </div>
                 </div>
-                <div className='card card-style mb-3'>
-                  <EmployeesBlock 
-                    totalCash={totalCash} 
-                    employees={employees} 
-                    activeEmployees={activeEmployees} 
-                    addEmployee={this.addEmployee}/>
-
-                </div>
-                {(activeEmployees.length > 0 && totalCash > 0) &&
+                {totalCash > 0 &&
                   <button   
                       onClick={this.preSave}
-                      className='btn btn-center-xl btn-xxl text-uppercase font-900 bg-highlight rounded-sm shadow-l'>
+                      className='mt-4 btn btn-center-xl btn-xxl text-uppercase font-900 bg-highlight rounded-sm shadow-l'>
                       Далее
                     </button>
                 }
@@ -271,14 +226,10 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user,
   shopToSee: state.auth.shopToSee,
-  state: state
 });
 
 
-const mapDispatchToProps = dispatch => ({
-  // checkAuth: (groups) => dispatch(authActions.checkAuthRequest(groups))
-  // auth
-  // checkToken: (token) => dispatch(AuthActions.checkTokenRequest(token)),
+const mapDispatchToProps = dispatch => ({  
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShiftCreateComponent);

@@ -5,11 +5,8 @@ import { connect } from 'react-redux';
 
 import endpoints from '../../redux/api/endpoints';
 import { createUrlParamsFromFilters } from '../../redux/api/utils';
-import { replaceItemInDictArrayById, getObjectbyId, toggleArrayDictById, lodashToggle } 
-  from '../../components/utils';
 
-import {  ResawToCreate, CreatedResaw, ResawInput, ResawList }  from '../../components/kladman/Resaw';
-
+import {  ResawToCreate, CreatedResaw, ResawInput, ResawList }  from '../../components/Resaw';
 
 export class ResawContainer extends Component {
   constructor(props) {
@@ -31,11 +28,6 @@ export class ResawContainer extends Component {
       resawsList: []
     }
 
-    this.setLumber = this.setLumber.bind(this);
-    this.preSave = this.preSave.bind(this);
-    this.saveData = this.saveData.bind(this);
-    this.deleteResaw = this.deleteResaw.bind(this);
-    this.back = this.back.bind(this);
   }
 
   componentDidMount() {
@@ -71,13 +63,13 @@ export class ResawContainer extends Component {
     })
   }
 
-  setLumber (e) {
+  setLumber = (e) => {
     this.setState({
       [e.target.name]: e.target.value
     })
   }
 
-  preSave () {
+  preSave = () => {
     const { lumber_in, lumber_in_quantity, lumber_out, lumber_out_quantity } = this.state
     
     let data = {
@@ -93,7 +85,7 @@ export class ResawContainer extends Component {
     })
   }
 
-  saveData () {
+  saveData = () => {
     const { dataToSave } = this.state
     const token = localStorage.getItem('token');
     
@@ -107,15 +99,9 @@ export class ResawContainer extends Component {
       this.setState({ message: response.data.message, createdResaw: response.data.created, 
         resawsList: response.data.resaws });
     })
-    .catch(err => {
-        // const error = new Error(err);
-        // error.data = parseErrorData(err);
-        this.setState({ message: 'Ошибка' });
-        // throw error;
-    })
   }
 
-  deleteResaw (id) {
+  deleteResaw = (id) => {
     const token = localStorage.getItem('token');
 
     axios({
@@ -134,7 +120,7 @@ export class ResawContainer extends Component {
  
   render() {
     const { createdResaw, dataToSave, message, resawsList } = this.state
-    const { user, shopToSee } = this.props
+    const { user } = this.props
     return (
       <div className=''>
         {createdResaw
@@ -193,9 +179,6 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = dispatch => ({
-  // checkAuth: (groups) => dispatch(authActions.checkAuthRequest(groups))
-  // auth
-  // checkToken: (token) => dispatch(AuthActions.checkTokenRequest(token)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResawContainer);

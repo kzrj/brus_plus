@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { } from 'react';
 
 
 function ShiftLumberTr (props) {
@@ -40,18 +40,12 @@ export function ShiftComponent (props) {
               удалить</button>
           }
         </div>
-        <p className='mb-0 color-black'>
-          Работали: 
-          {shift.employees.map(emp => <span className='mx-1'>{emp}</span>)}
-        </p>
         <p className='color-black mb-0 font-13 d-flex justify-content-between' style={{lineHeight: '15px'}}>
           <span>
             <span className='d-block mb-1'>Объем: <span className='d-block font-600 font-14'>{shift.volume} m3</span></span>
             <span>Объем без заборки: <span className='d-block font-600 font-14'>{shift.volume_without_zabor} m3</span></span>
           </span>
           <span>Общая сумма: <span className='d-block font-600 font-14'>{shift.back_calc_cash} р</span></span>
-          <span>На одного: <span className='d-block font-600 font-14'>
-            {shift.back_calc_cash_per_employee} р</span></span>
         </p>
       </div>
       <div className='content mt-0'>
@@ -60,7 +54,7 @@ export function ShiftComponent (props) {
             <th>Пиломат</th>
             <th>кол-во</th>
             <th>объем</th>
-            <th>ставка</th>
+            <th>цена</th>
             <th>сумма</th>
           </thead>
           <tbody>

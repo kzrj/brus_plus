@@ -4,10 +4,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import endpoints from '../../redux/api/endpoints';
-import { getToday, jsDateTimeToStrDate } from '../../components/utils';
+import { getToday } from '../../components/utils';
 import { createUrlParamsFromFilters } from '../../redux/api/utils';
 
-import { CashRecordsList, SalesList } from '../../components/kladman/DailyRep';
+import { CashRecordsList, SalesList } from '../../components/DailyRep';
 import { DayFilter } from '../../components/CommonForms';
 
 
@@ -30,9 +30,6 @@ export class DailyRepContainer extends Component {
 
       date: ''
     }
-    this.createExpense = this.createExpense.bind(this);
-    this.setData = this.setData.bind(this);
-    this.showResults = this.showResults.bind(this);
   }
 
   componentDidMount() {
@@ -62,7 +59,7 @@ export class DailyRepContainer extends Component {
     })
   }
 
-  createExpense (expense) {
+  createExpense = (expense) => {
     const token = localStorage.getItem('token');
     
     axios({
@@ -75,21 +72,15 @@ export class DailyRepContainer extends Component {
       this.setState({ message: response.data.message, createdExpense: response.data.expense,
         allRecords: response.data.records, total: response.data.total, });
     })
-    .catch(err => {
-        // const error = new Error(err);
-        // error.data = parseErrorData(err);
-        this.setState({ message: 'Ошибка' });
-        // throw error;
-    })
   }
 
-  setData (e) {
+  setData = (e) => {
     this.setState({
       [e.target.name]: e.target.value 
     })
   }
 
-  showResults () {
+  showResults = () => {
     const token = localStorage.getItem('token');
     const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id, date: this.state.date});
     axios({

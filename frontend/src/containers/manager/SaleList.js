@@ -5,13 +5,12 @@ import { connect } from 'react-redux';
 
 import endpoints from '../../redux/api/endpoints';
 import { jsDateTimeToStrDate } from '../../components/utils';
-import { parseErrorData, createUrlParamsFromFilters } from '../../redux/api/utils';
+import { createUrlParamsFromFilters } from '../../redux/api/utils';
 import { DateFilter } from '../../components/CommonForms';
 
 
 export function SalesTable (props) {
   const { sales, totals, deleteSale, shop } = props
-  console.log(shop)
 
   return (
     <table className='table table-sm table-responsive'>
@@ -130,7 +129,6 @@ export class SaleList extends Component {
     const token = localStorage.getItem('token');
     let today = new Date()
     let yesterday = new Date()
-    // yesterday.setDate(today. getDate() - 1);
     let startDate = jsDateTimeToStrDate(yesterday)
     let endDate = jsDateTimeToStrDate(today)
     const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id, 
@@ -217,9 +215,6 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = dispatch => ({
-  // checkAuth: (groups) => dispatch(authActions.checkAuthRequest(groups))
-  // auth
-  // checkToken: (token) => dispatch(AuthActions.checkTokenRequest(token)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SaleList);

@@ -7,7 +7,7 @@ import endpoints from '../../redux/api/endpoints';
 import { getToday } from '../../components/utils';
 import { createUrlParamsFromFilters } from '../../redux/api/utils';
 
-import { ExpensesList, CreateExpense } from '../../components/kladman/Expenses';
+import { ExpensesList, CreateExpense } from '../../components/Expenses';
 
 
 export class ExpensesContainer extends Component {
@@ -18,8 +18,6 @@ export class ExpensesContainer extends Component {
       expenses: [],
       total: null,
     }
-    this.createExpense = this.createExpense.bind(this);
-    this.deleteExpense = this.deleteExpense.bind(this);
   }
 
   componentDidMount() {
@@ -41,7 +39,7 @@ export class ExpensesContainer extends Component {
     })
   }
 
-  createExpense (expense) {
+  createExpense = (expense) => {
     const token = localStorage.getItem('token');
     
     axios({
@@ -54,15 +52,9 @@ export class ExpensesContainer extends Component {
       this.setState({ message: response.data.message, createdExpense: response.data.expense,
         expenses: response.data.records, total: response.data.total });
     })
-    .catch(err => {
-        // const error = new Error(err);
-        // error.data = parseErrorData(err);
-        this.setState({ message: 'Ошибка' });
-        // throw error;
-    })
   }
 
-  deleteExpense (id) {
+  deleteExpense = (id) => {
     const token = localStorage.getItem('token');
 
     axios({
@@ -114,7 +106,6 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  // dispatch: dispatch,
 })
 
 export default connect(

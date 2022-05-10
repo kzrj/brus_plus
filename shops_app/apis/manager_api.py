@@ -236,6 +236,7 @@ class ShiftViewSet(viewsets.ViewSet):
 
     class LumberSawRateSerializer(serializers.ModelSerializer):
         id = serializers.ReadOnlyField(source='lumber.pk')
+        lumber = serializers.ReadOnlyField(source='lumber.pk')
         name = serializers.ReadOnlyField(source='lumber.name')
         lumber_type = serializers.ReadOnlyField(source='lumber.lumber_type')
         quantity = serializers.IntegerField(default=0)
@@ -246,7 +247,7 @@ class ShiftViewSet(viewsets.ViewSet):
 
         class Meta:
             model = LumberSawRate
-            fields = ['id', 'employee_rate', 'name', 'lumber_type', 'quantity', 'volume',
+            fields = ['id', 'lumber', 'employee_rate', 'name', 'lumber_type', 'quantity', 'volume',
              'volume_total', 'wood_species', 'cash']
 
 

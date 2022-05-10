@@ -67,7 +67,6 @@ export class ManagerStock extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    // console.log(this.props.shopToSee)
     const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id});
     axios({
       method: 'get',

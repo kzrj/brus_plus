@@ -1,6 +1,6 @@
  import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { CircularProgress } from '@material-ui/core'
 
 import AuthActions from '../redux/redux-sauce/auth';
@@ -21,7 +21,6 @@ export function MenuItem (props) {
       style={{
         'background': 'white',
         'width': '300px',
-        // 'height': '0px',
         'color': 'white',
         'font-weight': 'bold',
         'font-size': '1em',
@@ -39,6 +38,7 @@ export function MenuItem (props) {
 function ShopMenu (props) {
   const { user, shopToSee } = props
   let manager_access = false
+
   if (user.is_manager && user.shop_id === shopToSee.id) {
     manager_access = true
   }
@@ -50,22 +50,12 @@ function ShopMenu (props) {
         <MenuItem title={'Склад. Текущие остатки'} to={'/manager/stock/'}/>
       </div>
 
-      {user.can_see_shop_raw_stock.includes(shopToSee.id) &&
-        <div className='my-4'>
-          <h3 className='text-center'>Круглый лес и план</h3>
-          {manager_access && 
-            <MenuItem title={'Приход круглого леса'} to={'/manager/rawstock/create_income/'}/>}
-          <MenuItem title={'Список отгрузок круглого леса'} to={'/manager/rawstock/income_timbers/'}/>
-          <MenuItem title={'План'} to={'/manager/quotas/overview/'}/>
-        </div>
-      }
-
       {user.can_see_shop_shift.includes(shopToSee.id) &&
         <div className='my-4'>
-          <h3 className='text-center'>Смены</h3>
-            <MenuItem title={'Смены список'} to={'/manager/shift_list/'}/>
+          <h3 className='text-center'>Приход пиломатериалов</h3>
+            <MenuItem title={'Приход список'} to={'/manager/shift_list/'}/>
           {manager_access &&
-            <MenuItem title={'Создать смену'} to={'/manager/shift/create_shift/'}/>
+            <MenuItem title={'Создать приход'} to={'/manager/shift/create_shift/'}/>
           }
         </div>
       }
@@ -82,7 +72,6 @@ function ShopMenu (props) {
           {manager_access &&
             <MenuItem title={'Создать продажу'} to={'/manager/sales/create_sale/'}/>
           }
-          <MenuItem title={'Калькулятор продавца'} to={'/manager/sales/calc/'}/>
           <MenuItem title={'Продажи список'} to={'/manager/sale_list/'}/>
         </div>
       }
@@ -90,9 +79,8 @@ function ShopMenu (props) {
       {user.can_see_shop_cash.includes(shopToSee.id) &&
         <div className='my-4'>
           <h3 className='text-center'>Отчеты и расходы</h3>
-          {manager_access && [
-            <MenuItem title={'Расходы'} to={'/manager/expenses/'}/>,
-            <MenuItem title={'Расчет рамщиков'} to={'/manager/ramshik_payments/'}/>]
+          {manager_access && 
+            <MenuItem title={'Расходы'} to={'/manager/expenses/'}/>
           }
           <MenuItem title={'Итоги за день'} to={'/manager/daily_report/'}/>
         </div>
@@ -105,9 +93,6 @@ function ShopMenu (props) {
 function AfterLogin (props) {
   const { user, setShopToSee, shopToSee } = props
 
-  if (user.is_ramshik) 
-    return <Redirect to="/ramshik/main" />
-  
   if (user.can_see_shop_stock) {
       return (
         shopToSee.id 
@@ -133,19 +118,15 @@ class Main extends Component {
       username: '',
       password: '',
     }
-    this.login = this.login.bind(this);
   }
 
-  componentDidMount() {
-    
-  }
-
-  login () {
+  login = () => {
     this.props.login(this.props.form.values)
   }
 
   render() {
     const { isLoggedIn, fetching, user, shopToSee } = this.props.state.auth
+
     return (
       fetching 
         ? <CircularProgress />

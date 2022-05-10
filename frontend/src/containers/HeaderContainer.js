@@ -27,8 +27,8 @@ function HeaderComp (props) {
     <div className='d-flex justify-content-between align-items-baseline px-3 py-2'>
       <h4 onClick={handleClickMenu}>{props.shopToSee.name}</h4>
       {props.shopToSee.name 
-          ? <h6 onClick={toMain}>к списку пилорам</h6>
-          : <h4>Пилорамы</h4>
+          ? <h6 onClick={toMain}>к списку торговых точек</h6>
+          : <h4>Брус плюс</h4>
         }
       <button className='btn btn-xs bg-red1-light' style={{lineHeight: '13px'}} onClick={handleClickLogout}>
         <span className='py-0 my-0'>

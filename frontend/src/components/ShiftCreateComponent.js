@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
-
+import React, { } from 'react';
 
 function FilteredLumberTr (props) {
   const { lumber, calcType, calcRowAndTotal, key } = props
-  console.log(lumber)
   let tr = 
     <tr key={key}>
       <td>
@@ -39,7 +37,6 @@ function FilteredLumberTr (props) {
   return null
 }
 
-
 export function LumberTableMixed (props) {
   const { lumbers, calcRowAndTotal, totalVolume, totalCash, calcType } = props
 
@@ -50,7 +47,7 @@ export function LumberTableMixed (props) {
         <th>Изделие</th>
         <th>Кол-во</th>
         <th>Обьем</th>
-        <th>Ставка</th>
+        <th>Цена</th>
         <th>Сумма</th>
       </thead>
       <tbody>
@@ -79,7 +76,6 @@ export function LumberTableMixed (props) {
   )
 }
 
-
 export function LumberTable (props) {
   const { lumbers } = props
   return(
@@ -95,7 +91,7 @@ export function LumberTable (props) {
           объем
         </th>
         <th>
-          ставка
+          цена за м3
         </th>
         <th>
           сумма
@@ -121,7 +117,6 @@ export function LumberTable (props) {
   )
 }
 
-
 export function ShiftToSave (props) {
   const { shift, saveData, back } = props
   const rowClass = 'mb-0 font-15 font-500 color-black'
@@ -130,26 +125,15 @@ export function ShiftToSave (props) {
       <div className='content'>
       <h4>Проверяем данные</h4>
       {shift &&
-          <div className=''>
-            <p className={rowClass}>
-              Объем общий: {shift.volume.toFixed(4)} м3</p>
-            <p className={rowClass}>
-              Общая сумма за работу: {shift.employee_cash.toFixed(1)} рублей</p>
-            <p className={rowClass}>
-              Сумма на одного человека: {shift.cash_per_employee.toFixed(1)} рублей</p>
-            <p className={rowClass}>Примечание: {shift.note}</p>
+        <div className=''>
+          <p className={rowClass}>
+            Объем общий: {shift.volume.toFixed(4)} м3</p>
+          <p className={rowClass}>
+            Общая сумма: {shift.employee_cash.toFixed(1)} рублей</p>
+          <p className={rowClass}>Примечание: {shift.note}</p>
 
-            <LumberTable lumbers={shift.raw_records}/>
-
-            {shift.employeesData && shift.employeesData.length > 0 &&
-              <div>
-                <h5>Кто работал?</h5>
-                {shift.employeesData.map(emp => 
-                  <p className='mb-0'>{emp.nickname}</p>
-                  )}
-              </div>
-            }
-          </div>
+          <LumberTable lumbers={shift.raw_records}/>
+        </div>
         }
         <div className='d-flex justify-content-around'>
           <button onClick={back}
@@ -166,76 +150,29 @@ export function ShiftToSave (props) {
   )
 }
 
-
 export function CreatedShift (props) {
   const { shift, message } = props
   const rowClass = 'mb-0 font-15 font-500 color-black'
   return (
     <div className='card card-style my-2'>
       <div className='content'>
-        <h4>Смена сохранена</h4>
+        <h4>Приход сохранен</h4>
         {shift &&
           <div className=''>
             <p className={rowClass}>Дата: {shift.date}</p>
             <p className={rowClass}>
               Объем общий: {shift.volume.toFixed(2)}  ({shift.back_calc_volume.toFixed(2)}) м3</p>
             <p className={rowClass}>
-              Общая сумма за работу: {shift.employee_cash && shift.employee_cash.toFixed(1)} ({shift.back_calc_cash.toFixed(1)}) 
+              Общая сумма: {shift.employee_cash && shift.employee_cash.toFixed(1)} ({shift.back_calc_cash.toFixed(1)}) 
               рублей</p>
-            <p className={rowClass}>
-              Сумма на одного человека: {shift.cash_per_employee && shift.cash_per_employee.toFixed(1)}
-              ({shift.back_calc_cash_per_employee && shift.back_calc_cash_per_employee.toFixed(1)}) рублей</p>
             <p className={rowClass}>Примечание: {shift.note}</p>
-
             <LumberTable lumbers={shift.lumber_records}/>
-            {shift.employees && shift.employees.length > 0 &&
-              <div>
-                <h5>Кто работал?</h5>
-                {shift.employees.map(emp => 
-                  <p className='mb-0'>{emp}</p>
-                  )}
-              </div>
-            }
           </div>
         }
         {message &&
           <h2 className='color-green1-light text-center'>Данные сохранены!</h2> 
         }
       </div>
-    </div>
-  )
-}
-
-export function EmployeesBlock (props) {
-  const { totalCash, employees, activeEmployees, addEmployee } = props
-  const empClass = ' rounded-xs px-2 py-2 '
-  return (
-    <div className='content'>
-      <h4>Кто работал? {activeEmployees.length > 0 && '(' + activeEmployees.length + ')'}</h4>
-      <div className='d-flex justify-content-between my-2 flex-wrap'>
-        {employees.map(emp => 
-          <div 
-            className={activeEmployees.includes(emp) 
-              ? 'bg-green2-light mx-1 my-1' + empClass : 'bg-dark1-dark mx-1 my-1' + empClass }
-             onClick={() => addEmployee(emp)}>
-            {emp.nickname}
-          </div>
-          )}
-      </div>
-      {activeEmployees.length > 0 && 
-        <div>
-          <div className='d-flex justify-content-start'>
-            {activeEmployees.map(aEmp => 
-              <div className='mx-2'>
-                <span className='d-block font-16'>{aEmp.nickname}</span>
-                {totalCash > 0 && 
-                  <span className='font-17 font-600'> {(totalCash / activeEmployees.length).toFixed(0)} руб</span>
-                }
-              </div>
-              )}
-          </div>
-        </div>
-      }
     </div>
   )
 }

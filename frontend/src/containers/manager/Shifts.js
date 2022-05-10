@@ -22,9 +22,6 @@ export class ManagerShiftList extends Component {
       message: null,
       error: null,
     }
-    this.setData = this.setData.bind(this);
-    this.showResults = this.showResults.bind(this);
-    this.deleteShift = this.deleteShift.bind(this);
   }
 
   componentDidMount() {
@@ -47,13 +44,13 @@ export class ManagerShiftList extends Component {
     })
   }
 
-  setData (e) {
+  setData = (e) => {
     this.setState({
       [e.target.name]: e.target.value 
     })
   }
 
-  showResults () {
+  showResults = () => {
     const token = localStorage.getItem('token');
     const params = createUrlParamsFromFilters({shop: this.props.shopToSee.id, 
       date_before: this.state.endDate, date_after: this.state.startDate});
@@ -68,7 +65,7 @@ export class ManagerShiftList extends Component {
     })
   }
 
-  deleteShift (id) {
+  deleteShift = (id) => {
     const token = localStorage.getItem('token');
     axios({
       method: 'delete',
@@ -105,9 +102,6 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = dispatch => ({
-  // checkAuth: (groups) => dispatch(authActions.checkAuthRequest(groups))
-  // auth
-  // checkToken: (token) => dispatch(AuthActions.checkTokenRequest(token)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerShiftList);
