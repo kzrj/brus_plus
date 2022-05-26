@@ -21,13 +21,13 @@ export function ExpensesList (props) {
             <td>
               {expense.note}
             </td>
-            {user.is_manager && 
-              <td>
-                <button className='btn btn-s bg-red1-light' onClick={() => deleteExpense(expense.id)}>
-                  Удалить
-                </button>
-              </td>
-            }
+            
+            <td>
+              <button className='btn btn-s bg-red1-light' onClick={() => deleteExpense(expense.id)}>
+                Удалить
+              </button>
+            </td>
+            
           </tr>
             )}
         </tbody>

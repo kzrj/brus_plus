@@ -46,20 +46,18 @@ function ShopMenu (props) {
         <MenuItem title={'Склад. Текущие остатки'} to={'/manager/stock/'}/>
       </div>
 
-      {user.is_manager &&
-        <div className='my-4'>
-          <h3 className='text-center'>Приход пиломатериалов</h3>
-            <MenuItem title={'Приход список'} to={'/manager/shift_list/'}/>
-            <MenuItem title={'Создать приход'} to={'/manager/shift/create_shift/'}/>
-        </div>
-      }
+      <div className='my-4'>
+        <h3 className='text-center'>Приход пиломатериалов</h3>
+          <MenuItem title={'Приход список'} to={'/manager/shift_list/'}/>
+          <MenuItem title={'Создать приход'} to={'/manager/shift/create_shift/'}/>
+      </div>     
 
       {user.is_manager &&
         <div className='my-4'>
-         <MenuItem title={'Перепил'} to={'/manager/resaws/create/'}/>
+          <MenuItem title={'Перепил'} to={'/manager/resaws/create/'}/>
         </div>
       }
-      
+     
       <div className='my-4'>
         <h3 className='text-center'>Продажи</h3>
         <MenuItem title={'Создать продажу'} to={'/manager/sales/create_sale/'}/>
@@ -69,9 +67,7 @@ function ShopMenu (props) {
       <div className='my-4'>
         <h3 className='text-center'>Отчеты и расходы</h3>
         <MenuItem title={'Расходы'} to={'/manager/expenses/'}/>
-        {user.is_manager &&
-          <MenuItem title={'Расчет поставщиков'} to={'/manager/ramshik_payments/'}/>
-        }
+        <MenuItem title={'Расчет поставщиков'} to={'/manager/ramshik_payments/'}/>
         <MenuItem title={'Итоги за день'} to={'/manager/daily_report/'}/>
       </div>
 

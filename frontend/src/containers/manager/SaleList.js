@@ -24,8 +24,8 @@ export function SalesTable (props) {
           : 'Продавeц'
         }
         </th>
-        <th>грузчик</th>
-        <th>кладмэн</th>
+        {/* <th>грузчик</th>
+        <th>кладмэн</th> */}
         <th>Доставка</th>
         <th className='text-nowrap'>Удалить</th>
       </thead>
@@ -67,12 +67,12 @@ export function SalesTable (props) {
               }
               {sale.seller_name && <span className=''>{sale.seller_name}</span>}
             </td>
-            <td>
+            {/* <td>
               {sale.loader_fee}
             </td>
             <td>
               {sale.kladman_fee}
-            </td>
+            </td> */}
             <td>
               {sale.delivery_fee}
             </td>
@@ -95,8 +95,8 @@ export function SalesTable (props) {
             }
           </td>
 
-          <td>{totals.total_loader_fee}</td>
-          <td>{totals.total_kladman_fee}</td>
+          {/* <td>{totals.total_loader_fee}</td>
+          <td>{totals.total_kladman_fee}</td> */}
           <td>{totals.total_delivery_fee}</td>
           <td>{totals.total_add_expenses}</td>
         </tr>

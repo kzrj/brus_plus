@@ -550,8 +550,9 @@ class CashRecordsView(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         self.get_object().delete()
         records = self.get_today_records()
+        
         return Response({
-            'records': self.CashRecordSerializer(self.get_queryset(), many=True).data,
+            'records': self.CashRecordSerializer(records, many=True).data,
             'totals': records.calc_sum()
             },
             status=status.HTTP_200_OK)

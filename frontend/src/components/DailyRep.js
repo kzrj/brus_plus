@@ -9,7 +9,7 @@ export function SalesList (props) {
         <thead>
           <th>Сумма</th>
           <th>Продавец</th>
-          <th>Клад/груз</th>
+          {/* <th>Клад/груз</th> */}
           <th>Доставка</th>
         </thead>
         <tbody>
@@ -23,10 +23,10 @@ export function SalesList (props) {
               <span className='d-block'>{sale.seller_name}</span>
               <span>{sale.seller_fee}</span>
             </td>
-            <td>
+            {/* <td>
               <span className='d-block'>К {sale.kladman_fee}</span>
               <span>Г {sale.loader_fee}</span>
-            </td>
+            </td> */}
             <td>
               <span>{sale.delivery_fee}</span>
             </td>
@@ -45,10 +45,10 @@ export function SalesList (props) {
                   <span className='d-block'>{seller.name} {seller.total}</span>
                 )}
               </td>
-              <td>
+              {/* <td>
                 <span className='d-block'>К {sales_totals.total_kladman_fee}</span>
                 <span>Г {sales_totals.total_loader_fee}</span>
-              </td>
+              </td> */}
               <td>
                 <span>{sales_totals.total_delivery_fee}</span>
               </td>

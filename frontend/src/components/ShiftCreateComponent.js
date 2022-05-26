@@ -17,7 +17,7 @@ function FilteredLumberTr (props) {
           value={lumber.quantity > 0 && lumber.quantity}/>
       </td>
       <td>{lumber.volume_total > 0 && lumber.volume_total.toFixed(4) + ' м3'}</td>
-      <td>
+      <td className='w-25'>
         <input style={{'color': '#6c6c6c'}}
           name='rate'
           type='number' className='w-100' onChange={(e) => calcRowAndTotal(e, lumber)} 

@@ -38,7 +38,7 @@ ReactDOM.render(
               <Route exact path="/" component={Main} />
 
               <Route exact path="/manager/shift_list/" 
-                component={requireAuthentication(ManagerShiftList, ['manager'])} />
+                component={requireAuthentication(ManagerShiftList, ['manager', 'seller'])} />
 
               <Route exact path="/manager/stock/" 
                 component={requireAuthentication(ManagerStock, ['manager','seller'])} />
@@ -47,22 +47,22 @@ ReactDOM.render(
                 component={requireAuthentication(SaleList, ['manager', 'seller'])} />
 
               <Route exact path="/manager/shift/create_shift/" 
-                component={requireAuthentication(ShiftCreateComponent, ['manager'])} />
+                component={requireAuthentication(ShiftCreateComponent, ['manager', 'seller'])} />
 
               <Route exact path="/manager/sales/create_sale/" 
                 component={requireAuthentication(SaleCreateCommonContainer, ['manager', 'seller'])} />       
 
               <Route exact path="/manager/expenses/" 
-                component={requireAuthentication(ExpensesContainer, ['manager', 'seller',])} />
+                component={requireAuthentication(ExpensesContainer, ['manager', 'seller'])} />
 
               <Route exact path="/manager/daily_report/" 
-                component={requireAuthentication(DailyRepContainer, ['manager', 'seller', ])} />
+                component={requireAuthentication(DailyRepContainer, ['manager', 'seller'])} />
 
               <Route exact path="/manager/resaws/create/" 
                 component={requireAuthentication(ResawContainer, ['manager' ])} />
 
               <Route exact path="/manager/ramshik_payments/" 
-                component={requireAuthentication(ManagerRamshikPayments, ['manager'])} />
+                component={requireAuthentication(ManagerRamshikPayments, ['manager', 'seller'])} />
 
             </Switch>
           </div>

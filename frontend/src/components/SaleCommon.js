@@ -192,8 +192,7 @@ export function LumbersToSale (props) {
 }
 
 export function SaleCheckList (props) {
-  const { loader, setAddParams, seller, bonus_kladman_label, sellers, client, delivery_fee, china_vira,
-    setChinaVira, preSave } = props
+  const { setAddParams, seller, sellers, client, delivery_fee, preSave } = props
 
   return (
     <div>
@@ -223,30 +222,6 @@ export function SaleCheckList (props) {
           </Select>
         </FormControl>
       </div>
-      <div className='d-flex justify-content-between'>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={loader}
-              onChange={setAddParams}
-              color="blue2"
-              name='loader'
-            />
-          }
-          label="Грузчик"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={bonus_kladman_label}
-              onChange={setAddParams}
-              color="blue2"
-              name='bonus_kladman_label'
-            />
-          }
-          label="Склад бонус"
-        />
-      </div>  
       <div className='d-flex justify-content-between mb-1 '>
         <TextField 
             className='pr-2'
@@ -261,7 +236,7 @@ export function SaleCheckList (props) {
       <button
         onClick={preSave}
         className='btn btn-center-xl btn-xxl text-uppercase font-900 bg-highlight rounded-sm 
-          shadow-l mt-2'>
+          shadow-l mt-4'>
         Далее
       </button>
     </div>
@@ -317,8 +292,7 @@ export function CreatedSale (props) {
             <p className={rowClass}>Клиент: {sale.client}</p>
             <p className={rowClass}>Объем: {sale.volume.toFixed(4)} м3</p>
             <p className={rowClass}>Вознаграждение продавца: {sale.seller_fee} рублей</p>
-            <p className={rowClass}>Вознаграждение грузчика: {sale.loader_fee} рублей</p>
-            <p className={rowClass}>Вознаграждение склада: {sale.kladman_fee} рублей</p>
+            {/* <p className={rowClass}>Вознаграждение грузчика: {sale.loader_fee} рублей</p> */}
             <p className={rowClass}>Стоимость доставки: {sale.delivery_fee} рублей</p>
 
             <p className='mb-1 font-17 font-500 color-black'>
@@ -351,7 +325,7 @@ export function SaleCommonToCreate (props) {
             <p className={rowClass}>Клиент: {sale.client}</p>
             <p className={rowClass}>Объем: {sale.volume.toFixed(4)} м3</p>
             <p className={rowClass}>Грузчик: {sale.loader ? 'да' : "нет"} </p>
-            <p className={rowClass}>Бонус складу: {sale.bonus_kladman ? 'да' : 'нет'}</p>
+            {/* <p className={rowClass}>Бонус складу: {sale.bonus_kladman ? 'да' : 'нет'}</p> */}
             <p className={rowClass}>Продавец: {seller ? seller.nickname : 'нет'}</p>
             <p className={rowClass}>Доставка: {sale.deliveryFee ? sale.deliveryFee + 'рублей' : 'нет'}</p>
             <p className='mb-1 font-17 font-500 color-black'>Сумма: {sale.sale_cash.toFixed(1)} рублей</p>

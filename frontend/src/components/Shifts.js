@@ -34,11 +34,10 @@ export function ShiftComponent (props) {
       <div className='content mb-1'>
         <div className='d-flex justify-content-between'>
           <p className='color-black mb-0 font-16'>Дата: {shift.date} {shift.shift_type}</p>
-          {user.is_manager && 
-            <button className='btn btn-s bg-red1-light mr-2 text-uppercase' 
+          <button className='btn btn-s bg-red1-light mr-2 text-uppercase' 
             onClick={() => deleteShift(shift.id)}>
-              удалить</button>
-          }
+              удалить
+          </button>
         </div>
         <p className='color-black mb-0 font-13 d-flex justify-content-between' style={{lineHeight: '15px'}}>
           <span className='d-block mb-1'>Поставщик: <span className='d-block font-600 font-14'>{shift.employees[0]}</span></span>
