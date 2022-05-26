@@ -35,7 +35,7 @@ function TrRow (props) {
           шт
         </td>
         <td>
-          {user.is_boss &&
+          {user.is_manager &&
             <TextField type='number' 
               className=''
               value={lumber.shop_rate > 0 && lumber.shop_rate} 

@@ -176,3 +176,37 @@ export function CreatedShift (props) {
     </div>
   )
 }
+
+export function EmployeesBlock (props) {
+  const { totalCash, employees, activeEmployees, addEmployee } = props
+  const empClass = ' rounded-xs px-2 py-2 '
+  return (
+    <div className='content'>
+      <h4>Кто поставщик? {activeEmployees.length > 0 && '(' + activeEmployees.length + ')'}</h4>
+      <div className='d-flex justify-content-between my-2 flex-wrap'>
+        {employees.map(emp => 
+          <div 
+            className={activeEmployees.includes(emp) 
+              ? 'bg-green2-light mx-1 my-1' + empClass : 'bg-dark1-dark mx-1 my-1' + empClass }
+             onClick={() => addEmployee(emp)}>
+            {emp.nickname}
+          </div>
+          )}
+      </div>
+      {activeEmployees.length > 0 && 
+        <div>
+          <div className='d-flex justify-content-start'>
+            {activeEmployees.map(aEmp => 
+              <div className='mx-2'>
+                <span className='d-block font-16'>{aEmp.nickname}</span>
+                {totalCash > 0 && 
+                  <span className='font-17 font-600'> {(totalCash / activeEmployees.length).toFixed(0)} руб</span>
+                }
+              </div>
+              )}
+          </div>
+        </div>
+      }
+    </div>
+  )
+}

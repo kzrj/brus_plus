@@ -146,7 +146,7 @@ export function ResawList (props) {
                   <span className='d-block'>{rsw.lumber_out_quantity}шт {rsw.lumber_out}</span>
                   <span className='font-italic'>{rsw.lumber_out_wood_species}</span>
                 </td>
-                {(user.is_boss || user.is_capo) &&
+                {(user.is_manager) &&
                   <td className='mr-3'>
                     <button className='btn btn-s bg-red1-light mr-2 text-uppercase' 
                     onClick={() => deleteResaw(rsw.id)}>

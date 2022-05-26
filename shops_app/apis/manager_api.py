@@ -105,13 +105,13 @@ class SaleView(viewsets.ModelViewSet):
             fields = ['id', 'nickname']
 
 
-    class OnlyManagerCanCreateDeletePermissions(permissions.BasePermission):
+    class SaleCRUDPermissions(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
                 return True
 
             if request.method == 'POST' or request.method == 'DELETE':
-                return request.user.account.is_manager
+                return True
 
             return False
 
@@ -123,7 +123,7 @@ class SaleView(viewsets.ModelViewSet):
 
     queryset = Sale.objects.all()
     serializer_class = SaleReadSerializer
-    permission_classes = [IsAuthenticated, OnlyManagerCanCreateDeletePermissions]
+    permission_classes = [IsAuthenticated, SaleCRUDPermissions]
 
     def create(self, request, serializer_class=SaleCreateSerializer):
         serializer = self.SaleCreateSerializer(data=request.data)
@@ -152,25 +152,25 @@ class SaleView(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def sale_create_data(self, request):
         shop = request.user.account.shop
-        kladman = User.objects.filter(account__is_kladman=True,
-             account__shop=shop).first()
-        kladman_id = kladman.pk if kladman else None
-        lumber_rates = LumberSawRate.objects.filter(shop=shop) \
-                                            .select_related('lumber')
+        lumber_rates = LumberSawRate.objects.filter(shop=shop).select_related('lumber')
 
         return Response({
             'pine_brus_lumbers': self.LumberSawRateSerializer(
-                lumber_rates.filter(lumber__lumber_type='brus', lumber__wood_species='pine'), many=True).data,
+                lumber_rates.filter(lumber__lumber_type='brus', lumber__wood_species='pine'),
+                 many=True).data,
             'larch_brus_lumbers': self.LumberSawRateSerializer(
-                lumber_rates.filter(lumber__lumber_type='brus', lumber__wood_species='larch'), many=True).data,
+                lumber_rates.filter(lumber__lumber_type='brus', lumber__wood_species='larch'),
+                 many=True).data,
             'pine_doska_lumbers': self.LumberSawRateSerializer(
-                lumber_rates.filter(lumber__lumber_type='doska', lumber__wood_species='pine'), many=True).data,
+                lumber_rates.filter(lumber__lumber_type='doska', lumber__wood_species='pine'),
+                 many=True).data,
             'larch_doska_lumbers': self.LumberSawRateSerializer(
-                lumber_rates.filter(lumber__lumber_type='doska', lumber__wood_species='larch'), many=True).data,
+                lumber_rates.filter(lumber__lumber_type='doska', lumber__wood_species='larch'),
+                 many=True).data,
             'lumbers': self.LumberSerializer(
                 Lumber.objects.all().add_shop_rate(shop=shop), many=True).data,
-            'sellers': self.SellerSerializer(User.objects.filter(account__is_seller=True), many=True).data,
-            'kladman_id': kladman_id
+            'sellers': self.SellerSerializer(User.objects.filter(account__is_seller=True,
+                 account__shop=shop), many=True).data,
             }, status=status.HTTP_200_OK)
 
     def destroy(self, request, pk=None):
@@ -257,13 +257,13 @@ class ShiftViewSet(viewsets.ViewSet):
             fields = ['id', 'nickname']
 
 
-    class OnlyManagerCanCreatePermissions(permissions.BasePermission):
+    class ShiftCRUDPermissions(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
-                return request.user.account.is_manager
+                return True
 
             if request.method == 'POST' or request.method == 'DELETE':
-                return request.user.account.is_manager
+                return True
 
             return False
 
@@ -273,7 +273,7 @@ class ShiftViewSet(viewsets.ViewSet):
 
             return False
 
-    permission_classes = [IsAuthenticated, OnlyManagerCanCreatePermissions]
+    permission_classes = [IsAuthenticated, ShiftCRUDPermissions]
 
     def create(self, request):
         serializer = self.ShiftCreateSerializer(data=request.data)
@@ -281,7 +281,7 @@ class ShiftViewSet(viewsets.ViewSet):
             shift = stock_operations_servises.create_shift_raw_records(
                 date=serializer.validated_data.get('date'),
                 shift_type=serializer.validated_data['shift_type'],
-                # employees=serializer.validated_data['employees'],
+                employees=serializer.validated_data['employees'],
                 raw_records=serializer.validated_data['raw_records'],
                 cash=serializer.validated_data['employee_cash'],
                 note=serializer.validated_data.get('note'),
@@ -317,7 +317,7 @@ class RamshikiPaymentViewSet(viewsets.ViewSet):
     class RamshikWithCashSerializer(serializers.ModelSerializer):
         class Meta:
             model = Account
-            fields = ['id', 'nickname', 'cash']
+            fields = ['id', 'nickname', 'cash',]
 
 
     class CreateRamshikPayoutSerializer(serializers.Serializer):
@@ -338,13 +338,13 @@ class RamshikiPaymentViewSet(viewsets.ViewSet):
         cash = serializers.IntegerField(default=0)
 
     
-    class OnlyManagerCanCreatePermissions(permissions.BasePermission):
+    class PaymentsCRUDPermissions(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
-                return request.user.account.is_manager
+                return True
 
             if request.method == 'POST' or request.method == 'DELETE':
-                return request.user.account.is_manager
+                return True
 
             return False
 
@@ -354,18 +354,25 @@ class RamshikiPaymentViewSet(viewsets.ViewSet):
 
             return False
 
-    permission_classes = [IsAuthenticated, OnlyManagerCanCreatePermissions]
+    permission_classes = [IsAuthenticated, PaymentsCRUDPermissions]
 
     def create(self, request):
         serializer = self.CreateRamshikSerializer(data=request.data)
         if serializer.is_valid():
             ramshik = Account.objects.create(
                 nickname=serializer.validated_data['nickname'],
-                cash=serializer.validated_data['cash'],
+                # cash=serializer.validated_data['cash'],
                 is_ramshik=True,
                 shop=request.user.account.shop,
                 )
-            
+            cash = serializer.validated_data['cash']
+            if cash > 0:
+                CashRecord.objects.create_payout_from_shift(employee=ramshik, shift=None,
+                    amount=cash, initiator=request.user)
+            if cash < 0:
+                CashRecord.objects.create_withdraw_employee(employee=ramshik, amount=-cash,
+                    initiator=request.user)
+
             return Response({'employees': self.RamshikWithCashSerializer(
                     Account.objects.filter(shop=request.user.account.shop, is_ramshik=True),
                      many=True).data}, status=status.HTTP_201_CREATED)
@@ -392,7 +399,7 @@ class RamshikiPaymentViewSet(viewsets.ViewSet):
             CashRecord.objects.create_withdraw_employee(
                 employee=serializer.validated_data['employee'],
                 amount=serializer.validated_data['amount'],
-                note=f'выдача зп рамщику {serializer.validated_data["employee"].nickname}',
+                note=f'Выплата поставщику {serializer.validated_data["employee"].nickname}',
                 initiator=request.user,
                 )
             return Response({
@@ -421,8 +428,16 @@ class RamshikiPaymentViewSet(viewsets.ViewSet):
 
 
 class SetLumberMarketPriceView(APIView):
+
+    class SetLumberPermission(permissions.BasePermission):
+        def has_permission(self, request, view):
+            if request.method == 'POST' and request.user.account.is_manager:
+                return True
+
+            return False
+
     # authentication_classes = [JSONWebTokenAuthentication]
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [SetLumberPermission]
 
     class SetLumberMarketPriceSerializer(serializers.Serializer):
         lumber = serializers.PrimaryKeyRelatedField(queryset=Lumber.objects.all())
@@ -434,7 +449,7 @@ class SetLumberMarketPriceView(APIView):
         if serializer.is_valid():
             lumber = serializer.validated_data['lumber']
             lumber_saw_rate = LumberSawRate.objects.get(lumber=lumber,
-                shop=self.request.user. account.shop)
+                shop=self.request.user.account.shop)
 
             lumber_saw_rate.employee_rate = serializer.validated_data['shop_rate']
             lumber_saw_rate.save()
@@ -473,13 +488,13 @@ class CashRecordsView(viewsets.ModelViewSet):
             fields = '__all__'
 
 
-    class OnlyManagerCanCreateDeletePermissions(permissions.BasePermission):
+    class CashRecordPermissions(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
                 return True
 
             if request.method == 'POST' or request.method == 'DELETE':
-                return request.user.account.is_manager
+                return True
 
             return False
 
@@ -489,18 +504,10 @@ class CashRecordsView(viewsets.ModelViewSet):
 
             return False
 
-
-    class BossOrCapoPermission(permissions.BasePermission):
-        def has_permission(self, request, view):
-            if request.method == 'POST':
-                return request.user.account.is_boss or request.user.account.is_capo
-
-            return False
-
     queryset = CashRecord.objects.all()
     serializer_class = CashRecordSerializer
     filter_class = ExpensesFilter
-    permission_classes = [IsAuthenticated, OnlyManagerCanCreateDeletePermissions]
+    permission_classes = [IsAuthenticated, CashRecordPermissions]
 
     def get_queryset(self):
         # all detail methods will not found if record is outside this queryset       
@@ -586,25 +593,22 @@ class ReSawViewSet(viewsets.ModelViewSet):
                 'lumber_out_quantity', 'shop']
 
 
-    class OnlyCapoCanCreatePermissions(permissions.BasePermission):
+    class ResawPermissions(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method == 'POST' or request.method == 'DELETE':
-                return request.user.account.is_boss or request.user.account.is_capo
+                return request.user.account.is_manager
 
             return False
 
         def has_object_permission(self, request, view, obj):
             if request.method == 'DELETE':
-                return request.user.account.is_boss or request.user.account.is_capo
+                return request.user.account.shop or obj.shop
 
             return False
 
-    permission_classes = [IsAuthenticated, OnlyCapoCanCreatePermissions]
+    permission_classes = [IsAuthenticated, ResawPermissions]
     queryset = ReSaw.objects.all()
     serializer_class = ReSawSerializer
-
-    # def get_queryset(self):
-    #     return ReSaw.objects.filter(shop=self.request.user.account.shop)
 
     def create(self, request, serializer_class=CreateReSawSerializer):
         serializer = self.CreateReSawSerializer(data=request.data)
@@ -635,83 +639,3 @@ class ReSawViewSet(viewsets.ModelViewSet):
                     self.get_queryset().filter(shop=request.user.account.shop), many=True).data,
             },
             status=status.HTTP_200_OK)
-
-
-# payout to manager
-class PayoutToManagerView(viewsets.ModelViewSet):
-
-    class CreateManagerPayoutSerializer(serializers.Serializer):
-        shop = serializers.PrimaryKeyRelatedField(queryset=Shop.objects.all())
-        amount = serializers.IntegerField()
-
-
-    class CashRecordWithTypeSerializer(serializers.ModelSerializer):
-        record_type = ChoiceField(read_only=True, choices=CashRecord.RECORD_TYPES)
-        who = serializers.ReadOnlyField(source='initiator.account.nickname')
-
-        class Meta:
-            model = CashRecord
-            fields = ['created_at', 'amount', 'note', 'record_type', 'who', 'id']
-
-
-    class ExpensesFilter(filters.FilterSet):
-        created_at = filters.DateFromToRangeFilter()
-
-        class Meta:
-            model = CashRecord
-            fields = '__all__'
-
-
-    class BossOrCapoPermission(permissions.BasePermission):
-        def has_permission(self, request, view):
-            if request.method == 'POST' or request.method == 'DELETE':
-                return request.user.account.is_boss or request.user.account.is_capo
-
-        def has_object_permission(self, request, view, obj):
-            if request.method == 'DELETE':
-                return request.user.account.is_boss
-            return False
-
-    queryset = CashRecord.objects.all()
-    serializer_class = CashRecordWithTypeSerializer
-    filter_class = ExpensesFilter
-    permission_classes = [IsAuthenticated, BossOrCapoPermission]
-
-    def destroy(self, request, pk=None):
-        shop = self.get_object().shop
-        self.get_object().delete()
-        records = CashRecord.objects.filter(shop=shop) \
-                        .filter(Q(record_type='withdraw_cash_from_manager') |
-                                Q(record_type='income_timber')) \
-                        .order_by('-created_at')
-        return Response({
-            'cash_records': self.CashRecordWithTypeSerializer(records, many=True).data,
-            'manager_balance': records.calc_manager_balance()
-            },
-            status=status.HTTP_200_OK)
-
-    @action(detail=False, methods=['post'], serializer_class=CreateManagerPayoutSerializer)
-    def payout_to_manager(self, request, pk=None):
-        serializer = self.CreateManagerPayoutSerializer(data=request.data)
-        if serializer.is_valid():
-            shop = serializer.validated_data['shop']
-            manager = Account.objects.filter(shop=shop, is_manager=True).first()
-
-            CashRecord.objects.create_withdraw_cash_from_manager(
-                manager_account=manager,
-                initiator=request.user,
-                amount=serializer.validated_data['amount']
-            )
-
-            cash_records = CashRecord.objects.filter(shop=shop) \
-                        .filter(Q(record_type='withdraw_cash_from_manager') |
-                                Q(record_type='income_timber')) \
-                        .order_by('-created_at')
-
-            return Response({
-                'cash_records': self.CashRecordWithTypeSerializer(cash_records, many=True).data,
-                'manager_balance': cash_records.calc_manager_balance()
-                },
-                status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

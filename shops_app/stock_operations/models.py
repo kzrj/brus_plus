@@ -41,7 +41,7 @@ class Shift(CoreModel):
         ordering = ['date',]
 
     def __str__(self):
-        return f'Cмена {self.shift_type} {self.date.strftime("%d-%m-%Y")}'
+        return f'Приход {self.shift_type} {self.date.strftime("%d-%m-%Y")}'
 
     @property
     def get_empoyees(self):

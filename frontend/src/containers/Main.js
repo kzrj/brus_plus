@@ -36,12 +36,8 @@ export function MenuItem (props) {
 }
 
 function ShopMenu (props) {
-  const { user, shopToSee } = props
-  let manager_access = false
-
-  if (user.is_manager && user.shop_id === shopToSee.id) {
-    manager_access = true
-  }
+  const { user } = props
+  props.setShopToSee(user.can_see_shop_stock)
 
   return (
     <div className=' '>
@@ -50,64 +46,38 @@ function ShopMenu (props) {
         <MenuItem title={'Склад. Текущие остатки'} to={'/manager/stock/'}/>
       </div>
 
-      {user.can_see_shop_shift.includes(shopToSee.id) &&
+      {user.is_manager &&
         <div className='my-4'>
           <h3 className='text-center'>Приход пиломатериалов</h3>
             <MenuItem title={'Приход список'} to={'/manager/shift_list/'}/>
-          {manager_access &&
             <MenuItem title={'Создать приход'} to={'/manager/shift/create_shift/'}/>
-          }
         </div>
       }
 
-      {user.can_see_shop_resaws.includes(shopToSee.id) &&
+      {user.is_manager &&
         <div className='my-4'>
          <MenuItem title={'Перепил'} to={'/manager/resaws/create/'}/>
         </div>
       }
       
-      {user.can_see_shop_sales.includes(shopToSee.id) &&
-        <div className='my-4'>
-          <h3 className='text-center'>Продажи</h3>
-          {manager_access &&
-            <MenuItem title={'Создать продажу'} to={'/manager/sales/create_sale/'}/>
-          }
-          <MenuItem title={'Продажи список'} to={'/manager/sale_list/'}/>
-        </div>
-      }
+      <div className='my-4'>
+        <h3 className='text-center'>Продажи</h3>
+        <MenuItem title={'Создать продажу'} to={'/manager/sales/create_sale/'}/>
+        <MenuItem title={'Продажи список'} to={'/manager/sale_list/'}/>
+      </div>
+      
+      <div className='my-4'>
+        <h3 className='text-center'>Отчеты и расходы</h3>
+        <MenuItem title={'Расходы'} to={'/manager/expenses/'}/>
+        {user.is_manager &&
+          <MenuItem title={'Расчет поставщиков'} to={'/manager/ramshik_payments/'}/>
+        }
+        <MenuItem title={'Итоги за день'} to={'/manager/daily_report/'}/>
+      </div>
 
-      {user.can_see_shop_cash.includes(shopToSee.id) &&
-        <div className='my-4'>
-          <h3 className='text-center'>Отчеты и расходы</h3>
-          {manager_access && 
-            <MenuItem title={'Расходы'} to={'/manager/expenses/'}/>
-          }
-          <MenuItem title={'Итоги за день'} to={'/manager/daily_report/'}/>
-        </div>
-      }
     </div>
   )
 
-}
-
-function AfterLogin (props) {
-  const { user, setShopToSee, shopToSee } = props
-
-  if (user.can_see_shop_stock) {
-      return (
-        shopToSee.id 
-        ? <ShopMenu user={user} shopToSee={shopToSee}/>
-        : <div className='my-3'>
-          {user.can_see_shop_stock.map(shop => 
-            <div className='card card-style' onClick={() => setShopToSee(shop)}>
-              <div className='content'>
-                <h4 className='text-center'>{shop.name}</h4>
-              </div>
-            </div>
-            )}
-        </div>
-      )
-    }
 }
 
 
@@ -126,13 +96,12 @@ class Main extends Component {
 
   render() {
     const { isLoggedIn, fetching, user, shopToSee } = this.props.state.auth
-
+    console.log(this.props.state.auth)
     return (
       fetching 
         ? <CircularProgress />
         : isLoggedIn 
-            ? <AfterLogin user={user} logout={this.props.logout} setShopToSee={this.props.setShopToSee}
-                shopToSee={shopToSee}/>
+            ? <ShopMenu user={user} shopToSee={shopToSee} setShopToSee={this.props.setShopToSee}/>
             : <LoginForm parentSubmit={this.login} />
     )
   }

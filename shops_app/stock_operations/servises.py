@@ -26,7 +26,7 @@ def create_sale_common(raw_records, initiator, seller=None, bonus_kladman=None,
     sale.selling_total_cash = round(volume_and_cash['sale_cash'])
 
     sale.cash_records.create_income_from_sale(amount=sale.selling_total_cash,
-        note=f'приход с продажи {sale.client}', initiator=initiator, sale=sale)
+        note=f'выручка с продажи {sale.client}', initiator=initiator, sale=sale)
 
     sale.calc_seller_fee()
     sale.calc_kladman_fee()
@@ -38,16 +38,23 @@ def create_sale_common(raw_records, initiator, seller=None, bonus_kladman=None,
 
 
 # Shift servises
-def create_shift(shift_type, cash, lumber_records, initiator=None, date=None, note=None):
+def create_shift(shift_type, cash, lumber_records, employees, initiator=None, date=None, note=None):
     if not date:
         date = timezone.now()
     shift = Shift.objects.create(shift_type=shift_type, date=date, employee_cash=cash, 
         initiator=initiator, shop=initiator.account.shop, note=note)
+    shift.employees.add(*employees)
     lumber_records.update(shift=shift)
     shift.back_calc_volume = lumber_records.calc_total_volume()
     shift.volume = shift.back_calc_volume
     shift.back_calc_cash = lumber_records.calc_total_cash()
+    shift.cash_per_employee = shift.employee_cash / len(employees)
     shift.save()
+
+    for emp in employees:
+        emp.cash_records.create_payout_from_shift(employee=emp, shift=shift,
+         amount=shift.cash_per_employee, initiator=initiator,
+          note=f'Начисление поставщику {emp.nickname} за приход #{shift.pk}')
     
     return shift
 
@@ -58,6 +65,10 @@ def create_shift_raw_records(**kwargs):
     del kwargs['raw_records']
     del kwargs['shop']
     return create_shift(**kwargs)
+
+def delete_shift(pk):
+    shift = Shift.objects.get(pk=pk)
+    shift.delete()
 
 
 # ReSaw servise

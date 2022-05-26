@@ -12,17 +12,16 @@ def create_test_employee(name, is_ramshik=False, is_senior_ramshik=False, is_man
 
     user = User.objects.create_user(username=name, password='123')
     emp = Account.objects.create(user=user, is_ramshik=is_ramshik, nickname=name, shop=shop,
-        is_senior_ramshik=is_senior_ramshik, is_manager=is_manager, is_kladman=is_kladman,
-        is_seller=is_seller)
+         is_manager=is_manager, is_seller=is_seller)
     return user
 
 def create_test_users():
     admin = create_test_employee(name='admin', is_manager=True)
-    ramshik1 = create_test_employee(name='ramshik1', is_ramshik=True, is_senior_ramshik=True)
+    ramshik1 = create_test_employee(name='ramshik1', is_ramshik=True)
     ramshik2 = create_test_employee(name='ramshik2', is_ramshik=True)
     ramshik3 = create_test_employee(name='ramshik3', is_ramshik=True)
     ramshik4 = create_test_employee(name='ramshik4', is_ramshik=True)
-    kladman = create_test_employee(name='kladman', is_kladman=True, is_seller=True)
+    kladman = create_test_employee(name='kladman',is_seller=True)
     seller = create_test_employee(name='sergei', is_seller=True)
     seller1 = create_test_employee(name='seller1', is_seller=True)
 
@@ -146,8 +145,7 @@ def create_init_data():
     create_test_lumber()
     create_saw_rates()
     admin = User.objects.create_user(username='bato', password='banzai123')
-    Account.objects.create(user=admin, is_manager=True, shop=shop1, nickname='bato', 
-        )
+    Account.objects.create(user=admin, is_manager=True, shop=shop1, nickname='bato')
     
     superuser = User.objects.create_superuser(username='kaizerj', password='batoshop123')
     Account.objects.create(user=superuser, is_manager=True, shop=shop1, nickname='kzr')

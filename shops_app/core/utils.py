@@ -66,7 +66,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
     shop = serializers.StringRelatedField()
     shop_id = serializers.ReadOnlyField(source='shop.pk')
     shop_type = serializers.ReadOnlyField(source='shop.stock_type')
-    can_see_shop_stock = ShopSerializer(many=True, read_only=True)
+    # can_see_shop_stock = ShopSerializer(many=True, read_only=True)
+    can_see_shop_stock = ShopSerializer(source='shop', read_only=True)
 
     class Meta:
         model = Account

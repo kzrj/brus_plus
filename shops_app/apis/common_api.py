@@ -48,8 +48,7 @@ class LumberStockListView(generics.ListAPIView):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
                 if request.GET.get('shop') and \
-                    (int(request.GET.get('shop'))
-                        in request.user.account.can_see_shop_stock.all().values_list('pk', flat=True)):
+                    (int(request.GET.get('shop')) == request.user.account.shop.pk):
                     return True
             return False
 
@@ -58,10 +57,6 @@ class LumberStockListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, CanSeeShopStockPermissions]
     filter_class = LumberStockFilter
 
-    # def get_queryset(self):
-    #     if self.request.user.account.shop.pk == int(self.request.GET.get('shop')):
-    #         return Lumber.objects.all().prefetch_related('records').prefetch_related('saw_rates') \
-    #             .annotate(market_cost2=)
 
 # shifts list
 class ShiftListView(generics.ListAPIView):
@@ -99,8 +94,7 @@ class ShiftListView(generics.ListAPIView):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
                 if request.GET.get('shop') and \
-                    (int(request.GET.get('shop'))
-                        in request.user.account.can_see_shop_shift.all().values_list('pk', flat=True)):
+                    (int(request.GET.get('shop')) == request.user.account.shop.pk):
                     return True
             return False
 
@@ -146,23 +140,9 @@ class SalesListView(generics.ListAPIView):
     class CanSeeShopSalePermissions(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
-                acc = request.user.account
-                shop = request.GET.get('shop')
-                can_see_shops_list = acc.can_see_shop_sales.all().values_list('pk', flat=True)
-
-                if shop:
-                    if acc.is_boss or request.user.is_staff:
-                        return True
-
-                    if acc.is_manager and acc.shop.pk == int(shop):
-                        return True
-
-                    if acc.is_seller and request.GET.get('seller') \
-                      and int(shop) in can_see_shops_list:
-                        return True
-
-                    if acc.is_capo and int(shop) in can_see_shops_list:
-                        return True
+                if request.GET.get('shop') and \
+                    (int(request.GET.get('shop')) == request.user.account.shop.pk):
+                    return True
             return False
 
     queryset = Sale.objects.all() \
@@ -203,11 +183,8 @@ class CashRecordsListView(generics.ListAPIView):
     class CanSeeShopCashPermissions(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
-                acc = request.user.account
-                shop = request.GET.get('shop')
-                can_see_shops_list = acc.can_see_shop_cash.all().values_list('pk', flat=True)
-
-                if shop and (int(shop)) in can_see_shops_list:
+                if request.GET.get('shop') and \
+                    (int(request.GET.get('shop')) == request.user.account.shop.pk):
                     return True
             return False
 
@@ -243,11 +220,8 @@ class DailyReport(APIView):
     class CanSeeShopDailyCashReportPermissions(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
-                acc = request.user.account
-                shop = request.GET.get('shop')
-                can_see_shops_list = acc.can_see_shop_daily_cash_report.all().values_list('pk', flat=True)
-
-                if shop and (int(shop)) in can_see_shops_list:
+                if request.GET.get('shop') and \
+                    (int(request.GET.get('shop')) == request.user.account.shop.pk):
                     return True
             return False
 
@@ -354,11 +328,8 @@ class ResawListView(generics.ListAPIView):
     class CanSeeShopResawPermissions(permissions.BasePermission):
         def has_permission(self, request, view):
             if request.method in permissions.SAFE_METHODS:
-                acc = request.user.account
-                shop = request.GET.get('shop')
-                can_see_shops_list = acc.can_see_shop_resaws.all().values_list('pk', flat=True)
-
-                if shop and (int(shop)) in can_see_shops_list:
+                if request.GET.get('shop') and \
+                    (int(request.GET.get('shop')) == request.user.account.shop.pk):
                     return True
             return False
 

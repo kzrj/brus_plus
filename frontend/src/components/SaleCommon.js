@@ -52,17 +52,6 @@ function LumberInputs (props) {
           type='number'
           value={lumber.selling_total_cash > 0 && lumber.selling_total_cash}/>
       </div>
-      <div className='d-flex justify-content-start mt-3'>
-        <TextField 
-          className='pr-2'
-          id="outlined-margin-dense"
-          variant="outlined" 
-          disabled
-          label='Цена за 1м3 опт'
-          type='number'
-          onChange={(e) => setRamaPrice(e, lumber.id)}
-          value={lumber.rama_price > 0 && lumber.rama_price}/>
-      </div>
     </div>
   )
 }

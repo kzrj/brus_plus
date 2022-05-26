@@ -41,10 +41,8 @@ export function ShiftComponent (props) {
           }
         </div>
         <p className='color-black mb-0 font-13 d-flex justify-content-between' style={{lineHeight: '15px'}}>
-          <span>
-            <span className='d-block mb-1'>Объем: <span className='d-block font-600 font-14'>{shift.volume} m3</span></span>
-            <span>Объем без заборки: <span className='d-block font-600 font-14'>{shift.volume_without_zabor} m3</span></span>
-          </span>
+          <span className='d-block mb-1'>Поставщик: <span className='d-block font-600 font-14'>{shift.employees[0]}</span></span>
+          <span className='d-block mb-1'>Объем: <span className='d-block font-600 font-14'>{shift.volume} m3</span></span>          
           <span>Общая сумма: <span className='d-block font-600 font-14'>{shift.back_calc_cash} р</span></span>
         </p>
       </div>

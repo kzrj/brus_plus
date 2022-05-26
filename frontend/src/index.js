@@ -21,6 +21,7 @@ import SaleList from './containers/manager/SaleList';
 import DailyRepContainer from './containers/manager/DailyRep';
 import ExpensesContainer from './containers/manager/Expenses';
 import ResawContainer from './containers/manager/Resaw';
+import ManagerRamshikPayments  from './containers/manager/RamshikPayments';
 
 import requireAuthentication from './containers/AuthContainer';
 
@@ -37,28 +38,32 @@ ReactDOM.render(
               <Route exact path="/" component={Main} />
 
               <Route exact path="/manager/shift_list/" 
-                component={requireAuthentication(ManagerShiftList, ['manager', 'boss', 'capo'])} />
+                component={requireAuthentication(ManagerShiftList, ['manager'])} />
 
               <Route exact path="/manager/stock/" 
-                component={requireAuthentication(ManagerStock, ['manager', 'boss', 'capo', 'seller'])} />
+                component={requireAuthentication(ManagerStock, ['manager','seller'])} />
 
               <Route exact path="/manager/sale_list/" 
-                component={requireAuthentication(SaleList, ['manager', 'boss', 'capo', 'seller'])} />
+                component={requireAuthentication(SaleList, ['manager', 'seller'])} />
 
               <Route exact path="/manager/shift/create_shift/" 
                 component={requireAuthentication(ShiftCreateComponent, ['manager'])} />
 
               <Route exact path="/manager/sales/create_sale/" 
-                component={requireAuthentication(SaleCreateCommonContainer, ['manager'])} />       
+                component={requireAuthentication(SaleCreateCommonContainer, ['manager', 'seller'])} />       
 
               <Route exact path="/manager/expenses/" 
-                component={requireAuthentication(ExpensesContainer, ['manager', 'boss', 'capo',])} />
+                component={requireAuthentication(ExpensesContainer, ['manager', 'seller',])} />
 
               <Route exact path="/manager/daily_report/" 
-                component={requireAuthentication(DailyRepContainer, ['manager', 'boss', 'capo',])} />
+                component={requireAuthentication(DailyRepContainer, ['manager', 'seller', ])} />
 
               <Route exact path="/manager/resaws/create/" 
-                component={requireAuthentication(ResawContainer, ['manager', 'boss', 'capo',])} />
+                component={requireAuthentication(ResawContainer, ['manager' ])} />
+
+              <Route exact path="/manager/ramshik_payments/" 
+                component={requireAuthentication(ManagerRamshikPayments, ['manager'])} />
+
             </Switch>
           </div>
         </div>

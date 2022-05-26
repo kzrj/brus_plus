@@ -21,16 +21,7 @@ export default function requireAuthentication(Component, groups) {
             if (groups.includes('manager') && user.is_manager)
               access = true
 
-            if (groups.includes('boss') && user.is_boss)
-              access = true
-
-            if (groups.includes('capo') && user.is_capo)
-              access = true
-
             if (groups.includes('seller') && user.is_seller)
-              access = true
-            
-            if (groups.includes('is_ramshik') && user.is_ramshik)
               access = true
           }
 

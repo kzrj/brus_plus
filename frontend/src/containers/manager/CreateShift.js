@@ -4,8 +4,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import endpoints from '../../redux/api/endpoints';
-import { replaceItemInDictArrayById, lodashToggle } from '../../components/utils';
-import { ShiftToSave, CreatedShift, LumberTableMixed } from '../../components/ShiftCreateComponent';
+import { replaceItemInDictArrayById, lodashToggle, toggleArrayDictById } from '../../components/utils';
+import { ShiftToSave, CreatedShift, LumberTableMixed, EmployeesBlock } from '../../components/ShiftCreateComponent';
 
 
 export class ShiftCreateComponent extends Component {
@@ -18,6 +18,9 @@ export class ShiftCreateComponent extends Component {
       totaCash: 0,
 
       createdShift: null,
+
+      employees: [],
+      activeEmployees: [],
 
       dataToSave: null,
 
@@ -112,8 +115,21 @@ export class ShiftCreateComponent extends Component {
         })
   }
 
+  addEmployee = (employee) => {
+    let { activeEmployees } = this.state
+    activeEmployees = toggleArrayDictById(activeEmployees, employee)
+    this.setState({
+      ...this.state,
+      activeEmployees: activeEmployees
+    })
+  }
+
   preSave = () => {
-    const { lumbers, totalCash, totalVolume  } = this.state
+    const { lumbers, totalCash, totalVolume, activeEmployees  } = this.state
+
+    let eIds = []
+    activeEmployees.map(emp => eIds = lodashToggle(eIds, emp.id))
+
     let raw_records = []
     lumbers.map(lumber =>{
       if (lumber.cash > 0 && lumber.quantity > 0) {
@@ -124,11 +140,11 @@ export class ShiftCreateComponent extends Component {
       shift_type: 'day',
       date: null,
       raw_records: raw_records,
-      employees: [],
+      employees: eIds,
       employee_cash: totalCash,
       volume: totalVolume,
-      employeesData: [],
-      cash_per_employee: 0
+      employeesData: activeEmployees,
+      cash_per_employee: totalCash / eIds.length
     }
 
     this.setState({
@@ -176,7 +192,8 @@ export class ShiftCreateComponent extends Component {
   }
 
   render() {
-    const { lumbers, totalVolume, totalCash, message, createdShift, dataToSave, calcType}  = this.state
+    const { lumbers, totalVolume, totalCash, message, createdShift, dataToSave, calcType, 
+      activeEmployees, employees}  = this.state
     return (
       <div>
         {createdShift
@@ -207,7 +224,15 @@ export class ShiftCreateComponent extends Component {
                     }
                   </div>
                 </div>
-                {totalCash > 0 &&
+                <div className='card card-style mb-3'>
+                  <EmployeesBlock 
+                    totalCash={totalCash} 
+                    employees={employees} 
+                    activeEmployees={activeEmployees} 
+                    addEmployee={this.addEmployee}/>
+
+                </div>
+                {(activeEmployees.length > 0 && totalCash > 0) > 0 &&
                   <button   
                       onClick={this.preSave}
                       className='mt-4 btn btn-center-xl btn-xxl text-uppercase font-900 bg-highlight rounded-sm shadow-l'>

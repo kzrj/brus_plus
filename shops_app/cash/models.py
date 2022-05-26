@@ -13,15 +13,13 @@ class CashRecordQuerySet(models.QuerySet):
     def create_payout_from_shift(self, employee, shift, amount, note=None, initiator=None):
         self.create(amount=amount, account=employee, shift=shift, record_type='payout_to_employee_from_shift',
             initiator=initiator, shop=initiator.account.shop, note=note)
-        employee.add_cash(amount)
 
     def create_withdraw_employee(self, employee, amount, initiator=None, note=None):
         self.create(amount=amount, account=employee, record_type='withdraw_employee', 
             initiator=initiator, shop=initiator.account.shop, note=note)
-        employee.remove_cash(amount)
 
     def create_withdraw_cash_from_manager(self, manager_account, amount, initiator=None):
-        manager_account.remove_cash(amount)
+        # manager_account.remove_cash(amount)
         return self.create(amount=amount, account=manager_account, 
             record_type='withdraw_cash_from_manager', initiator=initiator, shop=manager_account.shop)
 
@@ -50,15 +48,20 @@ class CashRecordQuerySet(models.QuerySet):
             - Coalesce(Sum('amount', filter=Q(record_type='withdraw_cash_from_manager')), Value(0))
         )['total']
 
+    def calc_ramshik_balance(self):
+        return self.aggregate(total=
+            Coalesce(Sum('amount', filter=Q(record_type='payout_to_employee_from_shift')), Value(0))
+            - Coalesce(Sum('amount', filter=Q(record_type='withdraw_employee')), Value(0))
+        )['total']
 
 class CashRecord(CoreModel):
     amount = models.IntegerField()
     RECORD_TYPES = [
-        ('payout_to_employee_from_shift', 'Начисление работникам'),
-        ('withdraw_employee', 'Обналичивание работникам'),
+        ('payout_to_employee_from_shift', 'Начисление поставщикам'),
+        ('withdraw_employee', 'Выплаты денег поставщикам'),
         ('withdraw_cash_from_manager', 'Вывод средств от кладмэна/менеджера'),
-        ('shop_expenses', 'Расходы рамы'),
-        ('sale_income', 'Приход с продажи'),
+        ('shop_expenses', 'Разные расходы'),
+        ('sale_income', 'Выручка с продажи'),
     ]
     record_type = models.CharField(max_length=100, choices=RECORD_TYPES)
 
@@ -68,7 +71,7 @@ class CashRecord(CoreModel):
     account = models.ForeignKey('accounts.Account', on_delete=models.SET_NULL, 
         related_name='cash_records', null=True, blank=True)
 
-    shift = models.ForeignKey('stock_operations.Shift', on_delete=models.SET_NULL, related_name='payouts',
+    shift = models.ForeignKey('stock_operations.Shift', on_delete=models.CASCADE, related_name='payouts',
         null=True, blank=True)
     sale = models.ForeignKey('stock_operations.Sale', on_delete=models.SET_NULL, related_name='cash_records',
         null=True, blank=True)

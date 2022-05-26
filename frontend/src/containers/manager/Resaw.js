@@ -128,7 +128,7 @@ export class ResawContainer extends Component {
           : dataToSave
             ? <ResawToCreate resaw={dataToSave} saveData={this.saveData} back={this.back} 
                 lumbers={this.state.lumbers}/>
-            : (user.is_boss || user.is_capo ) &&
+            : (user.is_manager) &&
               <div className='card card-style mt-3'>
                 <div className='content'>
                   <ResawInput 
