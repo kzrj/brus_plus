@@ -25,6 +25,7 @@ SECRET_KEY = 'django-insecure-*6(3&i@&gf7v-82t-!q)e6323(a9ukm-rddtean^k8pic=7#-n
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -45,10 +46,10 @@ INSTALLED_APPS = [
     'cash.apps.CashConfig',
     'apis.apps.ApisConfig',
 
-    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [

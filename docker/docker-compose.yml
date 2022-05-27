@@ -6,7 +6,6 @@ services:
     restart: unless-stopped
     ports:
       - "80:8080"
-      # - "5432"
     volumes:
       - ../:/code
       - ../nginx:/etc/nginx/conf.d
@@ -25,12 +24,6 @@ services:
     build: ../shops_app/docker/
     depends_on:
       - db
-      # - nginx
-
-    # command: bash -c "cd batorama &&
-    #                   python manage.py migrate &&
-    #                   python manage.py makemigrations --no-input &&
-    #                   python manage.py test rawstock.tests.test_selectors_quota"
 
     restart: unless-stopped
     command: bash -c "
