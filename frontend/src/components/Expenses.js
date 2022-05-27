@@ -3,7 +3,7 @@ import React, { Component, useState  } from 'react';
 import TextField from '@material-ui/core/TextField';
 
 export function ExpensesList (props) {
-  const { expenses, user, deleteExpense } = props
+  const { expenses, deleteExpense } = props
 
   return (
     <div>

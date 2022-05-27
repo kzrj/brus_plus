@@ -1,6 +1,7 @@
-// export const url = 'http://77.222.54.200';
-// export const url = 'http://192.168.10.94:8000';
-export const url = 'http://192.168.0.49:8000';
+const localUrl = 'http://192.168.0.49:8000'
+const prodUrl = 'http://77.222.54.204'
+
+export const url = (process.env.REACT_APP_ENV === 'local' && localUrl) || (process.env.REACT_APP_ENV === 'prod' && prodUrl);
 export const apiUrl = `${url}/api`;
 
 export default {

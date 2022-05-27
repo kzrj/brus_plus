@@ -33,9 +33,10 @@
     "redux-logger": "^3.0.6"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
+    "win-start:local": "set REACT_APP_ENV=local&& react-scripts start",
+    "win-start:prod": "set REACT_APP_ENV=prod&& react-scripts start",
+    "win-build:local": "set REACT_APP_ENV=local&& react-scripts build",
+    "win-build:prod": "set REACT_APP_ENV=prod&& react-scripts build"
   },
   "main": "index.js",
   "author": "kaizerj <kzrster@gmail.com>",
