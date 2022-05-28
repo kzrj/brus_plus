@@ -21,18 +21,11 @@ def create_test_users():
     ramshik2 = create_test_employee(name='ramshik2', is_ramshik=True)
     ramshik3 = create_test_employee(name='ramshik3', is_ramshik=True)
     ramshik4 = create_test_employee(name='ramshik4', is_ramshik=True)
-    kladman = create_test_employee(name='kladman',is_seller=True)
-    seller = create_test_employee(name='sergei', is_seller=True)
     seller1 = create_test_employee(name='seller1', is_seller=True)
 
     shop2 = Shop.objects.filter(name='shop2').first()
     shop1 = Shop.objects.filter(name='batoshop').first()
 
-    create_test_employee(name='manager1', is_manager=True, shop=shop1)
-    create_test_employee(name='manager2', is_manager=True, shop=shop2)
-
-    create_test_employee(name='capo1', is_manager=True, shop=shop1)
-    create_test_employee(name='capo2', is_manager=True, shop=shop2)
     
 def create_test_lumber():
     Lumber.objects.create(name='брус 10*15', width=0.1, height=0.15, length=4, volume=0.06,

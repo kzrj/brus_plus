@@ -52,11 +52,11 @@ function ShopMenu (props) {
           <MenuItem title={'Создать приход'} to={'/manager/shift/create_shift/'}/>
       </div>     
 
-      {user.is_manager &&
+      {/* {user.is_manager &&
         <div className='my-4'>
           <MenuItem title={'Перепил'} to={'/manager/resaws/create/'}/>
         </div>
-      }
+      } */}
      
       <div className='my-4'>
         <h3 className='text-center'>Продажи</h3>
