@@ -9,12 +9,18 @@ from django.conf import settings
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
 from apis import manager_api, ramshik_api, kladman_api, common_api
+from apis import stock_page_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^api/jwt/api-token-auth/', obtain_jwt_token),
     url(r'^api/jwt/api-token-refresh/', refresh_jwt_token),
     url(r'^api/jwt/api-token-verify/', verify_jwt_token),
+
+    # new api
+    # stock
+    path('api/stock_page/', stock_page_api.LumberStockListView.as_view()),
+    path('api/stock_page/set_price/', stock_page_api.SetLumberMarketPriceView.as_view()),
 
     # common read api
     path('api/common/stock/', common_api.LumberStockListView.as_view()),

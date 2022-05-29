@@ -14,16 +14,16 @@ import { SnackbarProvider } from 'notistack';
 import Main from './containers/Main';
 import Header from './containers/HeaderContainer';
 import ManagerShiftList  from './containers/manager/Shifts';
-import ManagerStock from './containers/manager/Stock';
+
+// import ManagerStock from './containers/manager/Stock';
+import ManagerStock from './pages/stockPage/Stock';
+
 import ShiftCreateComponent from './containers/manager/CreateShift';
 import SaleCreateCommonContainer from './containers/manager/SaleCreateCommon';
 import SaleList from './containers/manager/SaleList';
 import DailyRepContainer from './containers/manager/DailyRep';
 import ExpensesContainer from './containers/manager/Expenses';
-import ResawContainer from './containers/manager/Resaw';
 import ManagerRamshikPayments  from './containers/manager/RamshikPayments';
-
-import requireAuthentication from './containers/AuthContainer';
 
 const store = configureStore()
  
@@ -38,31 +38,28 @@ ReactDOM.render(
               <Route exact path="/" component={Main} />
 
               <Route exact path="/manager/shift_list/" 
-                component={requireAuthentication(ManagerShiftList, ['manager', 'seller'])} />
+                component={ManagerShiftList} />
 
               <Route exact path="/manager/stock/" 
-                component={requireAuthentication(ManagerStock, ['manager','seller'])} />
+                component={ManagerStock} />
 
               <Route exact path="/manager/sale_list/" 
-                component={requireAuthentication(SaleList, ['manager', 'seller'])} />
+                component={SaleList} />
 
               <Route exact path="/manager/shift/create_shift/" 
-                component={requireAuthentication(ShiftCreateComponent, ['manager', 'seller'])} />
+                component={ShiftCreateComponent} />
 
               <Route exact path="/manager/sales/create_sale/" 
-                component={requireAuthentication(SaleCreateCommonContainer, ['manager', 'seller'])} />       
+                component={SaleCreateCommonContainer} />       
 
               <Route exact path="/manager/expenses/" 
-                component={requireAuthentication(ExpensesContainer, ['manager', 'seller'])} />
+                component={ExpensesContainer} />
 
               <Route exact path="/manager/daily_report/" 
-                component={requireAuthentication(DailyRepContainer, ['manager', 'seller'])} />
-
-              <Route exact path="/manager/resaws/create/" 
-                component={requireAuthentication(ResawContainer, ['manager' ])} />
+                component={DailyRepContainer} />
 
               <Route exact path="/manager/ramshik_payments/" 
-                component={requireAuthentication(ManagerRamshikPayments, ['manager', 'seller'])} />
+                component={ManagerRamshikPayments} />
 
             </Switch>
           </div>

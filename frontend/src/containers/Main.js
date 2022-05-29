@@ -92,7 +92,7 @@ class Main extends Component {
 
   render() {
     const { isLoggedIn, fetching, user, shopToSee } = this.props.state.auth
-    console.log(this.props.state.auth)
+    
     return (
       fetching 
         ? <CircularProgress />
