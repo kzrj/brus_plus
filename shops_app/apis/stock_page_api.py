@@ -45,7 +45,7 @@ class LumberStockListView(generics.ListAPIView):
                     return True
             return False
 
-    queryset = Lumber.objects.all().prefetch_related('records')
+    queryset = Lumber.objects.all().prefetch_related('records').order_by('wood_species', 'length', 'width')
     serializer_class = LumberStockReadSerializer
     permission_classes = [IsAuthenticated, CanSeeShopStockPermissions]
     filter_class = LumberStockFilter

@@ -41,7 +41,8 @@ class InitDataView(APIView):
 
     def get(self, request, format=None):
         lumber_rates = LumberSawRate.objects.filter(shop=request.user.account.shop) \
-                                            .select_related('lumber')
+                                            .select_related('lumber') \
+                                            .order_by('lumber__wood_species', 'lumber__length', 'lumber__width')
         return Response({
             'lumbers': self.LumberSawRateSerializer(lumber_rates, many=True).data,
             'employees': self.RamshikSerializer(Account.objects.filter(is_ramshik=True,
