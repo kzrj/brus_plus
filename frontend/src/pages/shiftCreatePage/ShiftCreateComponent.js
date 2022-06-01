@@ -5,7 +5,7 @@ function FilteredLumberTr (props) {
   let tr = 
     <tr key={key}>
       <td>
-        {lumber.name} 
+        {lumber.full_name} 
         {lumber.wood_species === 'pine' 
           ? <span className='d-block color-brown1-light'>сосна</span> 
           : <span className='d-block color-green2-light'>лиственница</span>}

@@ -20,6 +20,7 @@ class InitDataView(APIView):
         id = serializers.ReadOnlyField(source='lumber.pk')
         lumber = serializers.ReadOnlyField(source='lumber.pk')
         name = serializers.ReadOnlyField(source='lumber.name')
+        full_name = serializers.ReadOnlyField(source='lumber.full_name')
         lumber_type = serializers.ReadOnlyField(source='lumber.lumber_type')
         quantity = serializers.IntegerField(default=0)
         volume = serializers.ReadOnlyField(source='lumber.volume')
@@ -30,7 +31,7 @@ class InitDataView(APIView):
         class Meta:
             model = LumberSawRate
             fields = ['id', 'lumber', 'employee_rate', 'name', 'lumber_type', 'quantity', 'volume',
-             'volume_total', 'wood_species', 'cash']
+             'volume_total', 'wood_species', 'cash', 'full_name']
 
 
     class RamshikSerializer(serializers.ModelSerializer):

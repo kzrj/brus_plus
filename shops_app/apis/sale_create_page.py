@@ -21,7 +21,7 @@ class InitDataView(APIView):
     class LumberSawRateSerializer(serializers.ModelSerializer):
         lumber = serializers.ReadOnlyField(source='lumber.pk')
         id = serializers.ReadOnlyField(source='lumber.pk')
-        name = serializers.ReadOnlyField(source='lumber.name')
+        name = serializers.ReadOnlyField(source='lumber.full_name')
         lumber_type = serializers.ReadOnlyField(source='lumber.lumber_type')    
         round_volume = serializers.ReadOnlyField(source='lumber.round_volume')
         wood_species = serializers.ReadOnlyField(source='lumber.wood_species')
