@@ -131,7 +131,7 @@ def create_saw_rates_for_all_shops():
     for shop in Shop.objects.all():
         lsr = list()
         for lumber in Lumber.objects.all():
-            if not lumber.saw_rates.all():
+            if not lumber.saw_rates.filter(shop=shop).:
                 lsr.append(LumberSawRate(lumber=lumber, shop=shop, employee_rate=1))
         LumberSawRate.objects.bulk_create(lsr)
 
