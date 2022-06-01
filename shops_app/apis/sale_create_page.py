@@ -61,19 +61,19 @@ class InitDataView(APIView):
         return Response({
             'pine_brus_lumbers': self.LumberSawRateSerializer(
                 lumber_rates.filter(lumber__lumber_type='brus', lumber__wood_species='pine') \
-                    .order_by('wood_species', 'length'),
+                    .order_by('lumber__wood_species', 'lumber__length'),
                  many=True).data,
             'larch_brus_lumbers': self.LumberSawRateSerializer(
                 lumber_rates.filter(lumber__lumber_type='brus', lumber__wood_species='larch') \
-                    .order_by('wood_species', 'length'),
+                    .order_by('lumber__wood_species', 'lumber__length'),
                  many=True).data,
             'pine_doska_lumbers': self.LumberSawRateSerializer(
                 lumber_rates.filter(lumber__lumber_type='doska', lumber__wood_species='pine') \
-                    .order_by('wood_species', 'length'),
+                    .order_by('lumber__wood_species', 'lumber__length'),
                  many=True).data,
             'larch_doska_lumbers': self.LumberSawRateSerializer(
                 lumber_rates.filter(lumber__lumber_type='doska', lumber__wood_species='larch') \
-                    .order_by('wood_species', 'length'),
+                    .order_by('lumber__wood_species', 'lumber__length'),
                  many=True).data,
             'lumbers': self.LumberSerializer(
                 Lumber.objects.all().order_by('wood_species', 'length').add_shop_rate(shop=shop), many=True).data,
