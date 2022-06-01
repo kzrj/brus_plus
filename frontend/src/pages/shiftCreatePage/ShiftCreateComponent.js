@@ -101,7 +101,7 @@ export function LumberTable (props) {
         {lumbers.map(lumber_record =>
         <tr>
           <td>
-            {lumber_record.name ? lumber_record.name : lumber_record.lumber}
+            {lumber_record.full_name ? lumber_record.full_name : lumber_record.lumber}
           </td>
           <td>{lumber_record.quantity} шт</td>
           <td>

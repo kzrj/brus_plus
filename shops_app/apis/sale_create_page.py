@@ -39,6 +39,7 @@ class InitDataView(APIView):
         selling_price = serializers.ReadOnlyField(source='shop_rate')
         selling_total_cash = serializers.ReadOnlyField(source='shop_rate')
         calc_type = serializers.CharField(default='exact')
+        name = serializers.ReadOnlyField(source='full_name')
 
         class Meta:
             model = Lumber
@@ -90,11 +91,12 @@ class CreateSaleView(generics.CreateAPIView):
             lumber = serializers.StringRelatedField()
             wood_species = ChoiceField(source='lumber.wood_species', read_only=True,
                  choices=Lumber.SPECIES)
+            name = serializers.ReadOnlyField(source='lumber.full_name')
             
             class Meta:
                 model = LumberRecord
                 fields = ['lumber', 'quantity', 'volume', 'selling_price', 'selling_total_cash',
-                 'shop_price', 'shop_total_cash', 'wood_species']
+                 'shop_price', 'shop_total_cash', 'wood_species', 'name']
 
         lumber_records = SaleLumberRecordSerializer(many=True)
         initiator = serializers.ReadOnlyField(source='initiator.account.nickname')
