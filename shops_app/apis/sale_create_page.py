@@ -61,18 +61,18 @@ class InitDataView(APIView):
         return Response({
             'pine_brus_lumbers': self.LumberSawRateSerializer(
                 lumber_rates.filter(lumber__lumber_type='brus', lumber__wood_species='pine'),
-                 many=True).data,
+                 many=True).order_by('wood_species', 'length').data,
             'larch_brus_lumbers': self.LumberSawRateSerializer(
                 lumber_rates.filter(lumber__lumber_type='brus', lumber__wood_species='larch'),
-                 many=True).data,
+                 many=True).order_by('wood_species', 'length').data,
             'pine_doska_lumbers': self.LumberSawRateSerializer(
                 lumber_rates.filter(lumber__lumber_type='doska', lumber__wood_species='pine'),
-                 many=True).data,
+                 many=True).order_by('wood_species', 'length').data,
             'larch_doska_lumbers': self.LumberSawRateSerializer(
                 lumber_rates.filter(lumber__lumber_type='doska', lumber__wood_species='larch'),
-                 many=True).data,
+                 many=True).order_by('wood_species', 'length').data,
             'lumbers': self.LumberSerializer(
-                Lumber.objects.all().add_shop_rate(shop=shop), many=True).data,
+                Lumber.objects.all().order_by('wood_species', 'length').add_shop_rate(shop=shop), many=True).data,
             'sellers': self.SellerSerializer(User.objects.filter(account__is_seller=True,
                  account__shop=shop), many=True).data,
             }, status=status.HTTP_200_OK)
