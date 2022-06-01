@@ -3,12 +3,12 @@ import endpoints from './endpoints';
 import { parseErrorData, createUrlParamsFromFilters } from './utils';
 
 const create = () => {
-    const getStock = (filters) => {
+    const getInitData = (filters) => {
         const token = localStorage.getItem('token');
         const params = createUrlParamsFromFilters(filters);
         return axios({
             method: 'get',
-            url: endpoints.STOCK_PAGE_STOCK,
+            url: endpoints.SALE_CREATE_PAGE_DATA,
             params: params,
             headers: {'Authorization': `JWT ${token}` }
           })
@@ -20,16 +20,15 @@ const create = () => {
         })
     }
 
-    const setLumberPrice = payload => {
+    const createSale = dataToSave => {
         const token = localStorage.getItem('token') || '';
-        const url = endpoints.STOCK_PAGE_SET_LUMBER_PRICE;
 
         return axios({
-                    method: 'post',
-                    url: url,
-                    data: payload,
-                    headers: { 'content-type': 'application/JSON', 'Authorization': `JWT ${token}` }
-        })
+            method: 'post',
+            url: endpoints.SALE_CREATE_PAGE_CREATE,
+            data: dataToSave,
+            headers: { 'content-type': 'application/JSON', 'Authorization': `JWT ${token}` }
+          })
         .then(response => {
             return response.data
         })
@@ -41,8 +40,8 @@ const create = () => {
     }  
 
     return {
-        getStock,
-        setLumberPrice
+        getInitData,
+        createSale
     }
 }
 

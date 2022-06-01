@@ -11,6 +11,7 @@ from stock.models import Lumber, Shop, LumberRecord, LumberSawRate
 from core.serializers import AnnotateFieldsModelSerializer
 
 
+# shop stock
 class LumberStockListView(generics.ListAPIView):
 
     class LumberStockReadSerializer(AnnotateFieldsModelSerializer):
@@ -58,6 +59,7 @@ class SetLumberMarketPriceView(APIView):
 
             return False
 
+    # authentication_classes = [JSONWebTokenAuthentication]
     permission_classes = [SetLumberPermission]
 
     class SetLumberMarketPriceSerializer(serializers.Serializer):

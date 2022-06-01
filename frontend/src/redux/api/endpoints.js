@@ -8,6 +8,31 @@ export default {
     JWT_AUTH: `${apiUrl}/jwt/api-token-auth/`,
     JWT_CHECK_TOKEN: `${apiUrl}/jwt/api-token-verify/`,
 
+    // stock page
+    STOCK_PAGE_STOCK: `${apiUrl}/stock_page/`,
+    STOCK_PAGE_SET_LUMBER_PRICE: `${apiUrl}/stock_page/set_price/`,
+
+    // shift list page
+    SHIFT_LIST_PAGE_LIST: `${apiUrl}/shift_list_page/`,
+    shift_list_delete: (id) => `${apiUrl}/shift_list_page/${id}/`,
+
+    //shift create page
+    SHIFT_CREATE_PAGE_DATA: `${apiUrl}/shift_create_page/init/`,
+    SHIFT_CREATE_PAGE_CREATE: `${apiUrl}/manager/shifts/create/`,
+
+    // sale create page
+    SALE_CREATE_PAGE_DATA: `${apiUrl}/sale_create_page/init/`,
+    SALE_CREATE_PAGE_CREATE: `${apiUrl}/sale_create_page/create/`,
+
+    // sale list page
+    SALE_LIST_PAGE_LIST: `${apiUrl}/sale_list_page/`,
+    sale_list_delete: (id) => `${apiUrl}/sale_list_page/${id}/`,
+
+    // expenses page
+    EXPENSES_PAGE_LIST: `${apiUrl}/expenses_page/list/`,
+    EXPENSES_PAGE_CREATE: `${apiUrl}/expenses_page/create_expense/`,
+    expenses_page_delete: (id) => `${apiUrl}/expenses_page/${id}/`,
+
     //common_api
     STOCK: `${apiUrl}/common/stock/`,
     SHIFTS: `${apiUrl}/common/shifts/`,

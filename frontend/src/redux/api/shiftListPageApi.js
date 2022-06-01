@@ -3,9 +3,15 @@ import endpoints from './endpoints';
 import { parseErrorData, createUrlParamsFromFilters } from './utils';
 
 const create = () => {
-    const getLumbers = (filters) => {
+    const getShiftList = (filters) => {
+        const token = localStorage.getItem('token');
         const params = createUrlParamsFromFilters(filters);
-        return axios.get(endpoints.LUMBERS, { params })
+        return axios({
+            method: 'get',
+            url: endpoints.SHIFT_LIST_PAGE_LIST,
+            headers: {'Authorization': `JWT ${token}` },
+            params: params
+          })
         .then(response => response.data)
         .catch(err => {
             const error = new Error(err);
@@ -14,23 +20,14 @@ const create = () => {
         })
     }
 
-    const createShift = payload => {
-        const { med_type, med_method, drug, doze } = payload;
+    const deleteShift = id => {
         const token = localStorage.getItem('token') || '';
-        const url = endpoints.RECIPES;
 
-        const formData = new FormData();
-        formData.append("med_type", med_type);
-        formData.append("med_method", med_method);
-        doze && formData.append("doze", doze);
-        formData.append("drug", drug);
-        
         return axios({
-                    method: 'post',
-                    url: url,
-                    data: formData,
-                    headers: { 'content-type': 'multipart/form-data', 'Authorization': `JWT ${token}` }
-        })
+            method: 'delete',
+            url: endpoints.shift_list_delete(id),
+            headers: { 'content-type': 'application/JSON', 'Authorization': `JWT ${token}` }
+          })
         .then(response => {
             return response.data
         })
@@ -42,8 +39,8 @@ const create = () => {
     }  
 
     return {
-        getLumbers,
-        createShift,
+        getShiftList,
+        deleteShift
     }
 }
 

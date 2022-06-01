@@ -3,12 +3,12 @@ import endpoints from './endpoints';
 import { parseErrorData, createUrlParamsFromFilters } from './utils';
 
 const create = () => {
-    const getStock = (filters) => {
+    const getExpenses = (filters) => {
         const token = localStorage.getItem('token');
         const params = createUrlParamsFromFilters(filters);
         return axios({
             method: 'get',
-            url: endpoints.STOCK_PAGE_STOCK,
+            url: endpoints.EXPENSES_PAGE_LIST,
             params: params,
             headers: {'Authorization': `JWT ${token}` }
           })
@@ -20,16 +20,15 @@ const create = () => {
         })
     }
 
-    const setLumberPrice = payload => {
+    const createExpense = payload => {
         const token = localStorage.getItem('token') || '';
-        const url = endpoints.STOCK_PAGE_SET_LUMBER_PRICE;
 
         return axios({
-                    method: 'post',
-                    url: url,
-                    data: payload,
-                    headers: { 'content-type': 'application/JSON', 'Authorization': `JWT ${token}` }
-        })
+            method: 'post',
+            url: endpoints.EXPENSES_PAGE_CREATE,
+            data: payload,
+            headers: { 'content-type': 'application/JSON', 'Authorization': `JWT ${token}` }
+          })
         .then(response => {
             return response.data
         })
@@ -38,11 +37,30 @@ const create = () => {
             error.data = parseErrorData(err);
             throw error;
         })
-    }  
+    }
+
+    const deleteExpense = id => {
+        const token = localStorage.getItem('token') || '';
+
+        return axios({
+            method: 'delete',
+            url: endpoints.expenses_page_delete(id),
+            headers: { 'content-type': 'application/JSON', 'Authorization': `JWT ${token}` }
+          })
+        .then(response => {
+            return response.data
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.data = parseErrorData(err);
+            throw error;
+        })
+    }
 
     return {
-        getStock,
-        setLumberPrice
+        getExpenses,
+        createExpense,
+        deleteExpense
     }
 }
 

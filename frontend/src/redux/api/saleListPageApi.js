@@ -3,14 +3,14 @@ import endpoints from './endpoints';
 import { parseErrorData, createUrlParamsFromFilters } from './utils';
 
 const create = () => {
-    const getStock = (filters) => {
+    const getSaleList = (filters) => {
         const token = localStorage.getItem('token');
         const params = createUrlParamsFromFilters(filters);
         return axios({
             method: 'get',
-            url: endpoints.STOCK_PAGE_STOCK,
-            params: params,
-            headers: {'Authorization': `JWT ${token}` }
+            url: endpoints.SALE_LIST_PAGE_LIST,
+            headers: {'Authorization': `JWT ${token}` },
+            params: params
           })
         .then(response => response.data)
         .catch(err => {
@@ -20,16 +20,14 @@ const create = () => {
         })
     }
 
-    const setLumberPrice = payload => {
+    const deleteSale = id => {
         const token = localStorage.getItem('token') || '';
-        const url = endpoints.STOCK_PAGE_SET_LUMBER_PRICE;
 
         return axios({
-                    method: 'post',
-                    url: url,
-                    data: payload,
-                    headers: { 'content-type': 'application/JSON', 'Authorization': `JWT ${token}` }
-        })
+            method: 'delete',
+            url: endpoints.sale_list_delete(id),
+            headers: { 'content-type': 'application/JSON', 'Authorization': `JWT ${token}` }
+          })
         .then(response => {
             return response.data
         })
@@ -41,8 +39,8 @@ const create = () => {
     }  
 
     return {
-        getStock,
-        setLumberPrice
+        getSaleList,
+        deleteSale
     }
 }
 

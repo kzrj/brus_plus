@@ -13,16 +13,17 @@ import { SnackbarProvider } from 'notistack';
 // Containers
 import Main from './containers/Main';
 import Header from './containers/HeaderContainer';
-import ManagerShiftList  from './containers/manager/Shifts';
 
-// import ManagerStock from './containers/manager/Stock';
 import ManagerStock from './pages/stockPage/Stock';
+import ManagerShiftList  from './pages/shiftListPage/Shifts';
+import ShiftCreateComponent from './pages/shiftCreatePage/CreateShift';
 
-import ShiftCreateComponent from './containers/manager/CreateShift';
-import SaleCreateCommonContainer from './containers/manager/SaleCreateCommon';
-import SaleList from './containers/manager/SaleList';
+import SaleCreateCommonContainer from './pages/saleCreatePage/SaleCreateCommon';
+import SaleList from './pages/saleListPage/SaleList';
+
+import ExpensesContainer from './pages/expensesPage/Expenses';
+
 import DailyRepContainer from './containers/manager/DailyRep';
-import ExpensesContainer from './containers/manager/Expenses';
 import ManagerRamshikPayments  from './containers/manager/RamshikPayments';
 
 const store = configureStore()
