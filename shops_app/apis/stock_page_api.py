@@ -16,6 +16,7 @@ class LumberStockListView(generics.ListAPIView):
 
     class LumberStockReadSerializer(AnnotateFieldsModelSerializer):
         stock_total_cash = serializers.ReadOnlyField()
+        full_name = serializers.ReadOnlyField()
         
         class Meta:
             model = Lumber

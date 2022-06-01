@@ -15,16 +15,19 @@ const stockApi = endpoints.create();
 function TrRow (props) {
   let { lumber, showNull, changeMarketCost, user } = props
   let show = true
+
   if (lumber.current_stock_quantity == 0 && !showNull) {
     show = false
   }
+
   let wood_species = lumber.wood_species === 'pine' ? 'сосна' : 'лиственница'
   let woodSpeciesClass = wood_species === 'сосна' ? 'color-green1-light' : 'color-brown1-light'
+
   return (
     show &&
       <tr>
         <td>
-          {lumber.name}
+          {lumber.full_name}
           <span className={'d-block font-italic font-500 ' + woodSpeciesClass}>{wood_species}</span>
         </td>
         <td>

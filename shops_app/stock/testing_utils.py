@@ -127,6 +127,14 @@ def create_saw_rates():
         lsr.append(LumberSawRate(lumber=lumber, shop=shop1, employee_rate=800))
     LumberSawRate.objects.bulk_create(lsr)
 
+def create_saw_rates_for_all_shops():
+    for shop in Shop.objects.all():
+        lsr = list()
+        for lumber in Lumber.objects.all():
+            if not lumber.saw_rates.all():
+                lsr.append(LumberSawRate(lumber=lumber, shop=shop, employee_rate=1))
+        LumberSawRate.objects.bulk_create(lsr)
+
 def create_test_data():
     shop1 = Shop.objects.create(name='batoshop')
     Shop.objects.create(name='shop2')

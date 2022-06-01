@@ -88,6 +88,10 @@ class Lumber(CoreModel):
     def china_name(self):
         return f'брус Китай {self.china_width}*{self.china_height}'
 
+    @property
+    def full_name(self):
+        return f'{self.name} {self.length}' 
+    
 
 class ShopQuerySet(models.QuerySet):
     pass
