@@ -54,6 +54,10 @@ class CashRecordQuerySet(models.QuerySet):
             - Coalesce(Sum('amount', filter=Q(record_type='withdraw_employee')), Value(0))
         )['total']
 
+    def supplier_records_by_shop(self, shop):
+        return self.filter(Q(record_type='payout_to_employee_from_shift') |
+                    Q(record_type='withdraw_employee')).filter(shop=shop)
+
 class CashRecord(CoreModel):
     amount = models.IntegerField()
     RECORD_TYPES = [

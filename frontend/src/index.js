@@ -22,9 +22,8 @@ import SaleCreateCommonContainer from './pages/saleCreatePage/SaleCreateCommon';
 import SaleList from './pages/saleListPage/SaleList';
 
 import ExpensesContainer from './pages/expensesPage/Expenses';
-
-import DailyRepContainer from './containers/manager/DailyRep';
-import ManagerRamshikPayments  from './containers/manager/RamshikPayments';
+import ManagerRamshikPayments  from './pages/suppliersPage/RamshikPayments';
+import DailyRepContainer from './pages/dailyReportPage/DailyRep';
 
 const store = configureStore()
  

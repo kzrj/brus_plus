@@ -33,6 +33,15 @@ export default {
     EXPENSES_PAGE_CREATE: `${apiUrl}/expenses_page/create_expense/`,
     expenses_page_delete: (id) => `${apiUrl}/expenses_page/${id}/`,
 
+    // suppliers page
+    SUPPLIERS_PAGE_INIT: `${apiUrl}/suppliers_page/init/`,
+    SUPPLIERS_PAGE_PAYOUT: `${apiUrl}/suppliers_page/payout/`,
+    SUPPLIERS_PAGE_CREATE: `${apiUrl}/suppliers_page/create/`,
+    suppliers_page_delete: (id) => `${apiUrl}/suppliers_page/${id}/`,
+
+    // daily report page
+    DAILY_REP_PAGE: `${apiUrl}/daily_report_page/`,
+    
     //common_api
     STOCK: `${apiUrl}/common/stock/`,
     SHIFTS: `${apiUrl}/common/shifts/`,
