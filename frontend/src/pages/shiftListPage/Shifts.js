@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { jsDateTimeToStrDate } from '../../components/utils';
 import endpoints from '../../redux/api/shiftListPageApi';
 
+import { jsDateTimeToStrDate } from '../commons/utils';
+import { DateFilter } from '../commons/CommonForms';
 import { ShiftList } from './ShiftsComponent';
-import { DateFilter } from '../../components/CommonForms';
+
 
 const shiftListApi = endpoints.create();
 

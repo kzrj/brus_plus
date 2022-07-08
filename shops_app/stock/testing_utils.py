@@ -16,17 +16,13 @@ def create_test_employee(name, is_ramshik=False, is_senior_ramshik=False, is_man
     return user
 
 def create_test_users():
-    admin = create_test_employee(name='admin', is_manager=True)
-    ramshik1 = create_test_employee(name='ramshik1', is_ramshik=True)
-    ramshik2 = create_test_employee(name='ramshik2', is_ramshik=True)
-    ramshik3 = create_test_employee(name='ramshik3', is_ramshik=True)
-    ramshik4 = create_test_employee(name='ramshik4', is_ramshik=True)
+    manager1 = create_test_employee(name='manager1', is_manager=True)
     seller1 = create_test_employee(name='seller1', is_seller=True)
 
-    shop2 = Shop.objects.filter(name='shop2').first()
-    shop1 = Shop.objects.filter(name='batoshop').first()
+    supplier1 = create_test_employee(name='supplier1', is_ramshik=True)
+    supplier2 = create_test_employee(name='supplier2', is_ramshik=True)
+    supplier3 = create_test_employee(name='supplier3', is_ramshik=True)
 
-    
 def create_test_lumber():
     Lumber.objects.create(name='брус 10*15', width=0.1, height=0.15, length=4, volume=0.06,
      employee_rate=600, wood_species='pine', lumber_type='brus', market_cost=12500,
@@ -135,19 +131,11 @@ def create_saw_rates_for_all_shops():
                 lsr.append(LumberSawRate(lumber=lumber, shop=shop, employee_rate=1))
         LumberSawRate.objects.bulk_create(lsr)
 
-def create_test_data():
-    shop1 = Shop.objects.create(name='batoshop')
-    Shop.objects.create(name='shop2')
-    create_test_users()
-    create_test_lumber()
-
 def create_init_data():
     shop1 = Shop.objects.create(name='batoshop')
     create_test_lumber()
     create_saw_rates()
-    admin = User.objects.create_user(username='bato', password='banzai123')
+    admin = User.objects.create_user(username='bato', password='qwerty123')
     Account.objects.create(user=admin, is_manager=True, shop=shop1, nickname='bato')
     
-    superuser = User.objects.create_superuser(username='kaizerj', password='batoshop123')
-    Account.objects.create(user=superuser, is_manager=True, shop=shop1, nickname='kzr')
     create_test_users()

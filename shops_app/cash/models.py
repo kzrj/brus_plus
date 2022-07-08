@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.db.models import Q, Subquery, OuterRef, Count, Prefetch, F, Sum, Value 
+from django.db.models import Q, Sum, Value 
 from django.db.models.functions import Coalesce
 from django.contrib.auth.models import User
-from django.utils import timezone
 
-from core.models import CoreModel, CoreModelManager
+from core.models import CoreModel
 
 
 class CashRecordQuerySet(models.QuerySet):
@@ -17,11 +16,6 @@ class CashRecordQuerySet(models.QuerySet):
     def create_withdraw_employee(self, employee, amount, initiator=None, note=None):
         self.create(amount=amount, account=employee, record_type='withdraw_employee', 
             initiator=initiator, shop=initiator.account.shop, note=note)
-
-    def create_withdraw_cash_from_manager(self, manager_account, amount, initiator=None):
-        # manager_account.remove_cash(amount)
-        return self.create(amount=amount, account=manager_account, 
-            record_type='withdraw_cash_from_manager', initiator=initiator, shop=manager_account.shop)
 
     def create_shop_expense(self, amount, note, initiator):
         return self.create(amount=amount, note=note, shop=initiator.account.shop, initiator=initiator,
@@ -40,12 +34,6 @@ class CashRecordQuerySet(models.QuerySet):
             Coalesce(Sum('amount', filter=Q(record_type='sale_income')), Value(0))
             - Coalesce(Sum('amount', filter=Q(record_type='shop_expenses')), Value(0))
             - Coalesce(Sum('amount', filter=Q(record_type='withdraw_employee')), Value(0))
-        )['total']
-
-    def calc_manager_balance(self):
-        return self.aggregate(total=
-            Coalesce(Sum('amount', filter=Q(record_type='income_timber')), Value(0))
-            - Coalesce(Sum('amount', filter=Q(record_type='withdraw_cash_from_manager')), Value(0))
         )['total']
 
     def calc_ramshik_balance(self):

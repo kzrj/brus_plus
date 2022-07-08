@@ -11,8 +11,8 @@ import configureStore from './redux/store/';
 import { SnackbarProvider } from 'notistack';
 
 // Containers
-import Main from './containers/Main';
-import Header from './containers/HeaderContainer';
+import Main from './pages/mainMenuPage/Main';
+import Header from './pages/mainMenuPage/HeaderContainer';
 
 import ManagerStock from './pages/stockPage/Stock';
 import ManagerShiftList  from './pages/shiftListPage/Shifts';

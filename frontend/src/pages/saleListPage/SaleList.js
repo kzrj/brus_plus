@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import endpoints from '../../redux/api/saleListPageApi';
-import { jsDateTimeToStrDate } from '../../components/utils';
-import { DateFilter } from '../../components/CommonForms';
+
+import { jsDateTimeToStrDate } from '../commons/utils';
+import { DateFilter } from '../commons/CommonForms';
 
 const saleListApi = endpoints.create();
 

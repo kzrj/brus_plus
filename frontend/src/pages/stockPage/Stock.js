@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -7,7 +5,8 @@ import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 
 import endpoints from '../../redux/api/stockPageApi';
-import { replaceItemInDictArrayById, getObjectbyId } from '../../components/utils';
+
+import { replaceItemInDictArrayById, getObjectbyId } from '../commons/utils';
 
 
 const stockApi = endpoints.create();

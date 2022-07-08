@@ -68,6 +68,7 @@ class SaleQuerySet(models.QuerySet):
             total_add_expenses=Sum('add_expenses'),
             )
 
+    # to remove
     def add_only_brus_volume(self, wood_species='pine'):
         subquery = LumberRecord.objects.filter(sale__pk=OuterRef('pk'), lumber__wood_species=wood_species) \
                             .filter(Q(lumber__lumber_type='brus') | Q(lumber__name__contains='обрезная')) \
@@ -78,6 +79,7 @@ class SaleQuerySet(models.QuerySet):
 
         return self.annotate(brus_volume=Coalesce(Subquery(subquery), 0.0))
 
+    # to remove
     def add_only_doska_volume_exclude_2_5(self, wood_species='pine'):
         subquery = LumberRecord.objects.filter(sale__pk=OuterRef('pk'),
                             lumber__lumber_type='doska', lumber__wood_species=wood_species) \
@@ -89,6 +91,7 @@ class SaleQuerySet(models.QuerySet):
 
         return self.annotate(doska_volume=Coalesce(Subquery(subquery), 0.0))
 
+    # to remove
     def calc_sold_volume_for_quota_calc(self, wood_species='pine'):
         return self.add_only_brus_volume(wood_species=wood_species) \
                    .add_only_doska_volume_exclude_2_5(wood_species=wood_species) \
@@ -149,36 +152,36 @@ class Sale(CoreModel):
         return None
  
 
-class ReSawQuerySet(models.QuerySet):
-    def create_resaw(self, resaw_lumber_in, resaw_lumber_out, Shop, employees=None, employee_cash=None,
-        initiator=None):
-        lumber_in = LumberRecord.objects.create_for_resaw(
-            lumber=resaw_lumber_in['lumber'], quantity=resaw_lumber_in['quantity'], shop=shop)
-        lumber_out = LumberRecord.objects.create_for_resaw(
-            lumber=resaw_lumber_out['lumber'], quantity=resaw_lumber_out['quantity'], shop=shop)
-        resaw = self.create(lumber_in=lumber_in, lumber_out=lumber_out, employee_cash=employee_cash,
-            initiator=initiator, shop=shop)
-        # add employees, employee_cash
+# class ReSawQuerySet(models.QuerySet):
+#     def create_resaw(self, resaw_lumber_in, resaw_lumber_out, Shop, employees=None, employee_cash=None,
+#         initiator=None):
+#         lumber_in = LumberRecord.objects.create_for_resaw(
+#             lumber=resaw_lumber_in['lumber'], quantity=resaw_lumber_in['quantity'], shop=shop)
+#         lumber_out = LumberRecord.objects.create_for_resaw(
+#             lumber=resaw_lumber_out['lumber'], quantity=resaw_lumber_out['quantity'], shop=shop)
+#         resaw = self.create(lumber_in=lumber_in, lumber_out=lumber_out, employee_cash=employee_cash,
+#             initiator=initiator, shop=shop)
+#         # add employees, employee_cash
 
-        return resaw
+#         return resaw
         
 
-class ReSaw(CoreModel):
-    shop = models.ForeignKey('stock.Shop', on_delete=models.SET_NULL, null=True, blank=True, 
-        related_name='resaws')
-    employee_cash = models.IntegerField(null=True, blank=True)
-    employees = models.ManyToManyField('accounts.Account')
-    lumber_in = models.OneToOneField('stock.LumberRecord', on_delete=models.CASCADE, related_name='re_saw_in')
-    lumber_out = models.OneToOneField('stock.LumberRecord', on_delete=models.CASCADE, related_name='re_saw_out')
+# class ReSaw(CoreModel):
+#     shop = models.ForeignKey('stock.Shop', on_delete=models.SET_NULL, null=True, blank=True, 
+#         related_name='resaws')
+#     employee_cash = models.IntegerField(null=True, blank=True)
+#     employees = models.ManyToManyField('accounts.Account')
+#     lumber_in = models.OneToOneField('stock.LumberRecord', on_delete=models.CASCADE, related_name='re_saw_in')
+#     lumber_out = models.OneToOneField('stock.LumberRecord', on_delete=models.CASCADE, related_name='re_saw_out')
 
-    initiator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, 
-        related_name='resaws')
+#     initiator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, 
+#         related_name='resaws')
 
-    objects = ReSawQuerySet.as_manager()
+#     objects = ReSawQuerySet.as_manager()
 
 
-    class Meta:
-        ordering = ['-created_at']
+#     class Meta:
+#         ordering = ['-created_at']
 
-    def __str__(self):
-        return f'Перепил {self.pk}'
+#     def __str__(self):
+#         return f'Перепил {self.pk}'

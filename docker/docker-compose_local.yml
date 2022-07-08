@@ -34,11 +34,16 @@ services:
     #                   python manage.py makemigrations --no-input &&
     #                   python manage.py test"
 
+    # command: bash -c "
+    #                   python manage.py makemigrations --no-input &&
+    #                   python manage.py migrate &&
+    #                   python manage.py collectstatic --no-input &&
+    #                   gunicorn shops_app.wsgi -b 0.0.0.0:8000"
+
     command: bash -c "
                       python manage.py makemigrations --no-input &&
                       python manage.py migrate &&
-                      python manage.py collectstatic --no-input &&
-                      gunicorn shops_app.wsgi -b 0.0.0.0:8000"
+                      python manage.py test"
 
     # command: bash -c "cd shop_app_backend && 
     #                   gunicorn shop_app_backend.wsgi -b 0.0.0.0:8000"

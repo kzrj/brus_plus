@@ -3,18 +3,19 @@ import datetime
 from django.test import TestCase, TransactionTestCase
 from django.contrib.auth.models import User
 
-from stock.models import Shift, Lumber, LumberRecord, Sale, Shop, ReSaw, RefuseLumber
+from stock.models import Lumber, LumberRecord, Shop
 from accounts.models import Account
 
 import stock.testing_utils as testing
+from stock_operations import servises
 
 
 class LumberRecordsSelectorsTest(TransactionTestCase):
     def setUp(self):
-        testing.create_test_data()
+        testing.create_init_data()
 
         self.seller1 = User.objects.get(username='seller1')
-        self.kladman = User.objects.get(username='kladman')
+        self.manager1 = User.objects.get(username='manager1')
 
         self.brus1 = Lumber.objects.filter(name__contains='брус')[0]
         self.brus2 = Lumber.objects.filter(name__contains='брус')[1]
@@ -45,7 +46,7 @@ class LumberRecordsSelectorsTest(TransactionTestCase):
     def test_calc_selling_total_cash(self):
         self.assertEqual(self.lumber_records_qs.calc_selling_total_cash(), 44814)
 
-    def test_calc_sale_volume_and_cash_schema1(self):
+    def test_calc_sale_volume_and_cash(self):
         data_for_sale_schema1 = self.lumber_records_qs.calc_sale_volume_and_cash()
         self.assertEqual(data_for_sale_schema1['total_volume'], round(0.6 + 0.6 + 2.016 + 1.32, 4))
         self.assertEqual(data_for_sale_schema1['shop_cash'], 7200 + 7200 + 14112 + 9240)
@@ -54,13 +55,14 @@ class LumberRecordsSelectorsTest(TransactionTestCase):
 
 class LumberRecordsSelectorsStockTest(TransactionTestCase):
     def setUp(self):
-        testing.create_test_data()
+        testing.create_init_data()
 
         self.seller1 = User.objects.get(username='seller1')
-        self.kladman = User.objects.get(username='kladman')
-        self.ramshik1 = User.objects.get(username='ramshik1')
-        self.ramshik2 = User.objects.get(username='ramshik2')
-        self.ramshik3 = User.objects.get(username='ramshik3')
+        self.manager1 = User.objects.get(username='manager1')
+
+        self.supplier1 = Account.objects.get(nickname='supplier1')
+        self.supplier2 = Account.objects.get(nickname='supplier2')
+        self.supplier3 = Account.objects.get(nickname='supplier3')
 
         self.brus1 = Lumber.objects.filter(name__contains='брус')[0]
         self.brus2 = Lumber.objects.filter(name__contains='брус')[1]
@@ -77,7 +79,7 @@ class LumberRecordsSelectorsStockTest(TransactionTestCase):
 
         self.shop = Shop.objects.all().first()
 
-        employees = [self.ramshik1.account, self.ramshik2.account, self.ramshik3.account]
+        suppliers = [ self.supplier1, self.supplier2, self.supplier3 ]
         data_list1 = [
             {'lumber': self.brus1, 'quantity': 50, 'rate': 600, 'cash': 360 },
             {'lumber': self.brus2, 'quantity': 55, 'rate': 600, 'cash': 240 },
@@ -85,8 +87,8 @@ class LumberRecordsSelectorsStockTest(TransactionTestCase):
             {'lumber': self.doska2, 'quantity': 240, 'rate': 600, 'cash': 576 },
         ]
 
-        self.shift = Shift.objects.create_shift_raw_records(shift_type='day', employees=employees, 
-            raw_records=data_list1, cash=1200, initiator=self.ramshik1, shop=self.shop)
+        self.shift = servises.create_shift_raw_records(shift_type='day', employees=suppliers, 
+            raw_records=data_list1, cash=1200, initiator=self.manager1, shop=self.shop)
 
         data_list = {
             'lumbers': [
@@ -99,33 +101,22 @@ class LumberRecordsSelectorsStockTest(TransactionTestCase):
             ],
             'loader': True,
             'seller': self.seller1,
-            'bonus_kladman': self.kladman,
             'delivery_fee': 500,
             'add_expenses': 0,
             'note': '',
             'client': 'Баярма'
         }
 
-        self.sale = Sale.objects.create_sale_common(
+        self.sale = servises.create_sale_common(
             raw_records=data_list['lumbers'],
-            initiator=self.kladman,
+            initiator=self.manager1,
             loader=data_list['loader'],
             delivery_fee=data_list['delivery_fee'],
             add_expenses=data_list['add_expenses'],
             note=data_list['note'],
             client=data_list['client'],
             seller=data_list['seller'],
-            bonus_kladman=data_list['bonus_kladman']
             )
-
-        self.resaw = ReSaw.objects.create_resaw(
-            resaw_lumber_in={'lumber': self.brus1, 'quantity': 10},
-            resaw_lumber_out={'lumber': self.doska1, 'quantity': 44},
-            shop=self.shop
-           )
-
-        self.refuse = RefuseLumber.objects.create_refuse(
-            lumber=self.brus1, quantity=2, shop=self.shop)
 
     def test_calc_total_income_outcome_quantity_by_shop_by_lumber(self):
         income_lumber_records_brus1 = LumberRecord.objects.calc_total_income_quantity_by_shop_by_lumber(
@@ -134,14 +125,14 @@ class LumberRecordsSelectorsStockTest(TransactionTestCase):
             lumber=self.brus1, shop=self.shop)
         
         self.assertEqual(income_lumber_records_brus1[0]['total_income_quantity'], 50)
-        self.assertEqual(outcome_lumber_records_brus1[0]['total_outcome_quantity'], 22)
+        self.assertEqual(outcome_lumber_records_brus1[0]['total_outcome_quantity'], 10)
 
         income_lumber_records_doska1 = LumberRecord.objects.calc_total_income_quantity_by_shop_by_lumber(
             lumber=self.doska1, shop=self.shop)
         outcome_lumber_records_doska1 = LumberRecord.objects.calc_total_outcome_quantity_by_shop_by_lumber(
             lumber=self.doska1, shop=self.shop)
         
-        self.assertEqual(income_lumber_records_doska1[0]['total_income_quantity'], 294)
+        self.assertEqual(income_lumber_records_doska1[0]['total_income_quantity'], 250)
         self.assertEqual(outcome_lumber_records_doska1[0]['total_outcome_quantity'], 70)
 
     def test_calc_total_income_outcome_volume_by_shop_by_lumber(self):
@@ -151,12 +142,12 @@ class LumberRecordsSelectorsStockTest(TransactionTestCase):
             lumber=self.brus1, shop=self.shop)
         
         self.assertEqual(income_lumber_records_brus1[0]['total_income_volume'], 3)
-        self.assertEqual(outcome_lumber_records_brus1[0]['total_outcome_volume'], 1.32)
+        self.assertEqual(outcome_lumber_records_brus1[0]['total_outcome_volume'], 0.6)
 
         income_lumber_records_doska1 = LumberRecord.objects.calc_total_income_volume_by_shop_by_lumber(
             lumber=self.doska1, shop=self.shop)
         outcome_lumber_records_doska1 = LumberRecord.objects.calc_total_outcome_volume_by_shop_by_lumber(
             lumber=self.doska1, shop=self.shop)
         
-        self.assertEqual(income_lumber_records_doska1[0]['total_income_volume'], 8.4672)
+        self.assertEqual(income_lumber_records_doska1[0]['total_income_volume'], 7.2)
         self.assertEqual(outcome_lumber_records_doska1[0]['total_outcome_volume'], 2.016)

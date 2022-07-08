@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import endpoints from '../../redux/api/saleCreatePageApi';
 
 import { replaceItemInDictArrayById, getObjectbyId, toggleArrayDictById, lodashToggle } 
-  from '../../components/utils';
-
+  from '../commons/utils';
 import { LumbersToSale, SaleCheckList, SaleCommonToCreate, CreatedSale } from './SaleCommon';
 
 const saleCreateApi = endpoints.create();

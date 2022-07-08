@@ -1,11 +1,9 @@
-import axios from 'axios';
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-// import endpoints from '../../redux/api/endpoints';
 import endpoints from '../../redux/api/shiftCreatePageApi';
-import { replaceItemInDictArrayById, lodashToggle, toggleArrayDictById } from '../../components/utils';
+
+import { replaceItemInDictArrayById, lodashToggle, toggleArrayDictById } from '../commons/utils';
 import { ShiftToSave, CreatedShift, LumberTableMixed, EmployeesBlock } from './ShiftCreateComponent';
 
 const shiftCreateApi = endpoints.create();

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import endpoints from '../../redux/api/expensesPageApi';
-import { getToday } from '../../components/utils';
 
+import { getToday } from '../commons/utils';
 import { ExpensesList, CreateExpense } from './ExpensesComponent';
 
 const expensesApi = endpoints.create();

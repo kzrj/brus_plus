@@ -2,6 +2,7 @@
 from rest_framework import serializers, permissions, status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from accounts.models import Account
 from cash.models import CashRecord
@@ -79,7 +80,7 @@ class RamshikiPaymentViewSet(viewsets.ViewSet):
                 Account.objects.filter(is_ramshik=True, shop=request.user.account.shop)\
                     .order_by('nickname'), many=True).data,
             'last_payouts': self.LastPayoutsSerializer(
-                CashRecord.objects.supplier_records_by_shop(shop=shop) \
+                CashRecord.objects.supplier_records_by_shop(shop=request.user.account.shop) \
                     .order_by('-created_at')[:10], many=True).data
             },
                 status=status.HTTP_200_OK)
@@ -100,7 +101,7 @@ class RamshikiPaymentViewSet(viewsets.ViewSet):
                         .order_by('nickname'),
                     many=True).data,
                 'last_payouts': self.LastPayoutsSerializer(
-                    CashRecord.objects.supplier_records_by_shop(shop=shop) \
+                    CashRecord.objects.supplier_records_by_shop(shop=request.user.account.shop) \
                         .order_by('-created_at')[:10], many=True).data,
                 'message': 'Успешно',
                 },

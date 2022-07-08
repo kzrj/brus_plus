@@ -3,12 +3,9 @@ import React, { useState, useRef  } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select'
 import InputLabel from '@material-ui/core/InputLabel'
-import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { getObjectbyId } from '../../components/utils';
-
+import { getObjectbyId } from '../commons/utils';
 
 function LumberInputs (props) {
   const { lumber, calcRowQnty, calcRowVolume, calcRowCash, setRamaPrice, label } = props

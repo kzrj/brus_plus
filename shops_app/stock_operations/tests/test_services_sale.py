@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
-import datetime
 from django.test import TestCase, TransactionTestCase
 from django.contrib.auth.models import User
 
-from stock.models import Shift, Lumber, LumberRecord, Sale, Shop
+from stock.models import Lumber, LumberRecord, Shop
+from stock_operations.models import Sale
 from accounts.models import Account
+from cash.models import CashRecord
 
-import stock.testing_utils as testing
+import stock.testing_utils as lumber_testing
+from stock_operations import servises
 
 
 class SaleServisesTest(TransactionTestCase):
     def setUp(self):
-        testing.create_init_data()
+        lumber_testing.create_init_data()
 
         self.seller1 = User.objects.get(username='seller1')
-        self.kladman = User.objects.get(username='kladman')
+        self.manager1 = User.objects.get(username='manager1')
 
         self.brus1 = Lumber.objects.filter(name__contains='брус')[0]
         self.brus2 = Lumber.objects.filter(name__contains='брус')[1]
@@ -43,28 +45,25 @@ class SaleServisesTest(TransactionTestCase):
             ],
             'loader': True,
             'seller': self.seller1,
-            'bonus_kladman': self.kladman,
             'delivery_fee': 500,
             'add_expenses': 0,
             'note': '',
             'client': 'Баярма'
         }
 
-        sale = Sale.objects.create_sale_common(
+        sale = servises.create_sale_common(
             raw_records=data_list['lumbers'],
-            initiator=self.kladman,
+            initiator=self.manager1,
             loader=data_list['loader'],
             delivery_fee=data_list['delivery_fee'],
             add_expenses=data_list['add_expenses'],
             note=data_list['note'],
             client=data_list['client'],
             seller=data_list['seller'],
-            bonus_kladman=data_list['bonus_kladman']
             )
 
         self.assertEqual(sale.volume, round(0.6 + 1.296 + 2.016, 4))
         self.assertEqual(sale.seller, self.seller1)
-        self.assertEqual(sale.bonus_kladman, self.kladman)
         self.assertEqual(sale.delivery_fee, 500)
         self.assertEqual(sale.add_expenses, 0)
         self.assertEqual(sale.client, 'Баярма')
@@ -72,5 +71,9 @@ class SaleServisesTest(TransactionTestCase):
         self.assertEqual(sale.selling_total_cash, 7500 + 19010 + 15443)
 
         self.assertEqual(round(sale.seller_fee), 1631)
-        self.assertEqual(sale.kladman_fee, 391)
         self.assertEqual(sale.loader_fee, round((0.6 + 1.296 + 2.016) * 100))
+
+        cash_records = CashRecord.objects.filter(sale=sale)
+        self.assertEqual(cash_records.count(), 1)
+        self.assertTrue('выручка с продажи' in cash_records.first().note)
+        self.assertTrue(7500 + 19010 + 15443 == cash_records.first().amount)

@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.exceptions import PermissionDenied, NotAuthenticated
@@ -9,8 +7,6 @@ from rest_framework import status, exceptions, serializers
 from rest_framework.views import exception_handler as drf_exception_handler
 
 from django.utils.encoding import force_text
-from django.utils import timezone
-from django.core.mail import send_mail
 from django.db.utils import IntegrityError as DjangoIntegrityError
 
 from accounts.models import Account
@@ -66,7 +62,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
     shop = serializers.StringRelatedField()
     shop_id = serializers.ReadOnlyField(source='shop.pk')
     shop_type = serializers.ReadOnlyField(source='shop.stock_type')
-    # can_see_shop_stock = ShopSerializer(many=True, read_only=True)
     can_see_shop_stock = ShopSerializer(source='shop', read_only=True)
 
     class Meta:

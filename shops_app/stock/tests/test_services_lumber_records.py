@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
-import datetime
-from django.test import TestCase, TransactionTestCase
+from django.test import TransactionTestCase
 from django.contrib.auth.models import User
 
-from stock.models import Shift, Lumber, LumberRecord, Sale, Shop
-from accounts.models import Account
+from stock.models import Lumber, LumberRecord, Shop
 
 import stock.testing_utils as testing
 
 
 class LumberRecordsServisesTest(TransactionTestCase):
     def setUp(self):
-        testing.create_test_data()
+        testing.create_init_data()
 
         self.seller1 = User.objects.get(username='seller1')
-        self.kladman = User.objects.get(username='kladman')
+        self.manager1 = User.objects.get(username='manager1')
 
         self.brus1 = Lumber.objects.filter(name__contains='брус')[0]
         self.brus2 = Lumber.objects.filter(name__contains='брус')[1]
@@ -30,6 +28,17 @@ class LumberRecordsServisesTest(TransactionTestCase):
          china_volume__isnull=False).first()
 
         self.shop = Shop.objects.all().first()
+
+    def test_create_from_shift_list(self):
+        data_list = [
+            {'lumber': self.brus1, 'quantity': 10, 'volume_total': 0.6, 'rate': 600, 'cash': 360 },
+            {'lumber': self.brus2, 'quantity': 10, 'volume_total': 0.4, 'rate': 600, 'cash': 240 },
+            {'lumber': self.doska1, 'quantity': 50, 'volume_total': 1.44, 'rate': 600, 'cash': 864 },
+            {'lumber': self.doska2, 'quantity': 40, 'volume_total': 0.96, 'rate': 600, 'cash': 576 },
+        ]
+
+        lrs = LumberRecord.objects.create_from_list(records_list=data_list)
+        self.assertEqual(LumberRecord.objects.all().count(), 4)
 
     def test_create_for_common_sale_exact_calc(self):
         data_list = [

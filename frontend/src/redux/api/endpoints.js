@@ -18,7 +18,7 @@ export default {
 
     //shift create page
     SHIFT_CREATE_PAGE_DATA: `${apiUrl}/shift_create_page/init/`,
-    SHIFT_CREATE_PAGE_CREATE: `${apiUrl}/manager/shifts/create/`,
+    SHIFT_CREATE_PAGE_CREATE: `${apiUrl}/shift_create_page/create/`,
 
     // sale create page
     SALE_CREATE_PAGE_DATA: `${apiUrl}/sale_create_page/init/`,
@@ -40,56 +40,5 @@ export default {
     suppliers_page_delete: (id) => `${apiUrl}/suppliers_page/${id}/`,
 
     // daily report page
-    DAILY_REP_PAGE: `${apiUrl}/daily_report_page/`,
-    
-    //common_api
-    STOCK: `${apiUrl}/common/stock/`,
-    SHIFTS: `${apiUrl}/common/shifts/`,
-    SALES: `${apiUrl}/common/sales/`,
-    RESAWS: `${apiUrl}/common/resaw/`,
-    DAILY_REP: `${apiUrl}/common/daily_report/`,
-    SALE_CALC_DATA: `${apiUrl}/common/sales/calc_data/`,
-    INCOME_TIMBERS: `${apiUrl}/common/income_timbers/`,
-    QUOTAS: `${apiUrl}/common/quotas/`,
-
-    // ramshik api
-    // RAMSHIK_SHIFT_CREATE_DATA: `${apiUrl}/ramshik/shifts/create/init_data/`,
-    // RAMSHIK_SHIFT_CREATE: `${apiUrl}/ramshik/shifts/create/`,
-    RAMSHIK_SHIFT_LIST: `${apiUrl}/ramshik/shifts/list/`,
-    RAMSHIK_PAYOUTS: `${apiUrl}/ramshik/payouts/`,
-
-    // manager api
-    EMPLOYEE_PAYOUT_INIT_DATA: `${apiUrl}/manager/ramshik_payments/init_data/`,
-    EMPLOYEE_PAYOUT: `${apiUrl}/manager/ramshik_payments/ramshik_payout/`,
-    EMPLOYEE_CREATE: `${apiUrl}/manager/ramshiki/create/`,
-    manager_ramshiki_delete: (id) => `${apiUrl}/manager/ramshiki/${id}/`,
-
-    MANAGER_SHIFT_LIST: `${apiUrl}/manager/shift_list/`,
-
-    MANAGER_STOCK: `${apiUrl}/manager/stock/`,
-    MANAGER_STOCK_SET_LUMBER_PRICE: `${apiUrl}/manager/stock/set_price/`,
-    
-    MANAGER_SALE_LIST: `${apiUrl}/manager/sale_list/`,
-    
-    MANAGER_RAWSTOCK_INCOME_INIT_DATA: `${apiUrl}/manager/rawstock/timber/create_income/init_data/`,
-    MANAGER_RAWSTOCK_INCOME_CREATE: `${apiUrl}/manager/rawstock/timber/create_income/`,
-    manager_rawstock_income_delete: (id) => `${apiUrl}/manager/rawstock/timber/income_timbers/${id}/`,
-
-    MANAGER_SHIFT_CREATE_DATA: `${apiUrl}/manager/shifts/create/init_data/`,
-    MANAGER_SHIFT_CREATE: `${apiUrl}/manager/shifts/create/`,
-    manager_shift_delete: (id) => `${apiUrl}/manager/shifts/${id}/`,
-
-    MANAGER_SALE_INIT_DATA: `${apiUrl}/manager/sales/create/init_data/`,
-    MANAGER_SALE_CREATE: `${apiUrl}/manager/sales/create/`,
-    manager_delete_sale: (id) => `${apiUrl}/manager/sales/${id}/`,
-
-    MANAGER_CASH_RECORDS_LIST: `${apiUrl}/manager/cash_records/list/`,
-    MANAGER_CASH_RECORDS_CREATE: `${apiUrl}/manager/cash_records/create_expense/`,
-    manager_delete_expense: (id) => `${apiUrl}/manager/cash_records/${id}/`,
-
-    MANAGER_RESAW_CREATE: `${apiUrl}/manager/resaws/create/`,
-    manager_delete_resaw: (id) => `${apiUrl}/manager/resaws/${id}/`,
-
-    CAPO_BOSS_PAYOUT_MANAGER_CREATE: `${apiUrl}/boss_capo/cash_records/payout_to_manager/`,
-    boss_delete_manager_payout: (id) => `${apiUrl}/boss_capo/cash_records/${id}/`,
+    DAILY_REP_PAGE: `${apiUrl}/daily_report_page/`,   
 }

@@ -8,7 +8,7 @@ from django.conf import settings
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
 from apis import stock_page_api, shift_list_page, shift_create_page, sale_create_page, \
-    sale_list_page, expenses_page, daily_report_page
+    sale_list_page, expenses_page, daily_report_page, suppliers_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,10 +44,10 @@ urlpatterns = [
     path('api/expenses_page/<int:pk>/', expenses_page.CashRecordsView.as_view({'delete': 'destroy'})),
 
     # suppliers page
-    path('api/suppliers_page/init/', manager_api.RamshikiPaymentViewSet.as_view({'get': 'init_data'})),
-    path('api/suppliers_page/payout/', manager_api.RamshikiPaymentViewSet.as_view({'post': 'payout'})),
-    path('api/suppliers_page/create/', manager_api.RamshikiPaymentViewSet.as_view({'post': 'create'})),
-    path('api/suppliers_page/<int:pk>/', manager_api.RamshikiPaymentViewSet.as_view({'delete': 'destroy'})),
+    path('api/suppliers_page/init/', suppliers_page.RamshikiPaymentViewSet.as_view({'get': 'init_data'})),
+    path('api/suppliers_page/payout/', suppliers_page.RamshikiPaymentViewSet.as_view({'post': 'payout'})),
+    path('api/suppliers_page/create/', suppliers_page.RamshikiPaymentViewSet.as_view({'post': 'create'})),
+    path('api/suppliers_page/<int:pk>/', suppliers_page.RamshikiPaymentViewSet.as_view({'delete': 'destroy'})),
 
     # daily report page
     path('api/daily_report_page/', daily_report_page.DailyReport.as_view()),

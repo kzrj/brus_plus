@@ -2,7 +2,7 @@
 from django.utils import timezone
 
 from stock.models import ( LumberRecord )
-from stock_operations.models import ( Sale, Shift, ReSaw )
+from stock_operations.models import ( Sale, Shift )
 
 
 # Sale servises
@@ -71,14 +71,14 @@ def delete_shift(pk):
     shift.delete()
 
 
-# ReSaw servise
-def create_resaw(resaw_lumber_in, resaw_lumber_out, shop, employees=None, employee_cash=None,
-    initiator=None):
-    lumber_in = LumberRecord.objects.create_for_resaw(
-        lumber=resaw_lumber_in['lumber'], quantity=resaw_lumber_in['quantity'], shop=shop)
-    lumber_out = LumberRecord.objects.create_for_resaw(
-        lumber=resaw_lumber_out['lumber'], quantity=resaw_lumber_out['quantity'], shop=shop)
-    resaw = ReSaw.objects.create(lumber_in=lumber_in, lumber_out=lumber_out, employee_cash=employee_cash,
-        initiator=initiator, shop=shop)
+# # ReSaw servise
+# def create_resaw(resaw_lumber_in, resaw_lumber_out, shop, employees=None, employee_cash=None,
+#     initiator=None):
+#     lumber_in = LumberRecord.objects.create_for_resaw(
+#         lumber=resaw_lumber_in['lumber'], quantity=resaw_lumber_in['quantity'], shop=shop)
+#     lumber_out = LumberRecord.objects.create_for_resaw(
+#         lumber=resaw_lumber_out['lumber'], quantity=resaw_lumber_out['quantity'], shop=shop)
+#     resaw = ReSaw.objects.create(lumber_in=lumber_in, lumber_out=lumber_out, employee_cash=employee_cash,
+#         initiator=initiator, shop=shop)
 
-    return resaw
+#     return resaw

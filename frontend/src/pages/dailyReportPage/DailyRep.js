@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import endpoints from '../../redux/api/dailyReportPageApi';
-import { getToday } from '../../components/utils';
+
+import { getToday } from '../commons/utils';
+import { DayFilter } from '../commons/CommonForms';
 
 import { CashRecordsList, SalesList } from './DailyRepComponent';
-import { DayFilter } from '../../components/CommonForms';
 
 const dailyReportApi = endpoints.create();
 
